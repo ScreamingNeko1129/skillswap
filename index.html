@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SkillSwap — Student Skill Exchange Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --yellow: #F5C518;
+  --yellow-light: #FFF3C4;
+  --yellow-hover: #E0B000;
+  --teal: #1A8F7F;
+  --teal-dark: #0E6B5E;
+  --teal-light: #E6F5F2;
+  --dark: #1B1B1B;
+  --dark2: #2D2D2D;
+  --gray: #6B7280;
+  --gray-light: #F3F4F6;
+  --gray-border: #E5E7EB;
+  --white: #FFFFFF;
+  --red: #EF4444;
+  --green: #22C55E;
+  --blue: #3B82F6;
+  --radius: 14px;
+  --radius-sm: 8px;
+  --shadow: 0 2px 12px rgba(0,0,0,0.06);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,0.1);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--white); line-height:1.6; overflow-x:hidden; }
+
+/* UTILITIES */
+.container { max-width:1160px; margin:0 auto; padding:0 24px; }
+.section-title { font-size:clamp(1.6rem,3.5vw,2.4rem); font-weight:800; line-height:1.2; margin-bottom:6px; }
+.section-title .accent { color:var(--teal); font-family:'Playfair Display',serif; font-style:italic; }
+.section-sub { color:var(--gray); font-size:1rem; max-width:560px; }
+.section-sub.center { margin:0 auto; text-align:center; }
+.text-center { text-align:center; }
+
+/* ANIMATIONS */
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+.anim-up { animation:fadeUp 0.5s ease both; }
+
+/* ===== NAVBAR ===== */
+.navbar { position:sticky; top:0; z-index:100; background:rgba(255,255,255,0.92); backdrop-filter:blur(12px); border-bottom:1px solid var(--gray-border); }
+.navbar .container { display:flex; align-items:center; justify-content:space-between; height:64px; }
+.nav-logo { display:flex; align-items:center; gap:8px; font-weight:800; font-size:1.25rem; color:var(--dark); text-decoration:none; cursor:pointer; }
+.nav-logo .logo-icon { width:34px; height:34px; background:var(--yellow); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; }
+.nav-links { display:flex; gap:6px; align-items:center; }
+.nav-link { padding:8px 16px; border-radius:30px; font-size:0.88rem; font-weight:500; color:var(--gray); cursor:pointer; transition:all 0.2s; border:none; background:none; font-family:inherit; }
+.nav-link:hover { color:var(--dark); background:var(--gray-light); }
+.nav-link.active { color:var(--dark); background:var(--yellow-light); }
+.nav-cta { padding:8px 20px; border-radius:30px; font-size:0.88rem; font-weight:600; color:var(--dark); background:var(--yellow); border:none; cursor:pointer; font-family:inherit; transition:all 0.2s; }
+.nav-cta:hover { background:var(--yellow-hover); transform:translateY(-1px); }
+
+/* PAGE SYSTEM */
+.page { display:none; }
+.page.active { display:block; }
+
+/* ===== HERO ===== */
+.hero { padding:60px 0 50px; position:relative; overflow:hidden; }
+.hero::before { content:''; position:absolute; top:-100px; right:-100px; width:400px; height:400px; background:radial-gradient(circle, rgba(245,197,24,0.12) 0%, transparent 70%); border-radius:50%; }
+.hero::after { content:''; position:absolute; bottom:-80px; left:-60px; width:300px; height:300px; background:radial-gradient(circle, rgba(26,143,127,0.08) 0%, transparent 70%); border-radius:50%; }
+.hero .container { display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center; position:relative; }
+.hero-text h1 { font-size:clamp(2rem,4.5vw,3.2rem); font-weight:800; line-height:1.1; margin-bottom:16px; }
+.hero-text h1 .hl { color:var(--yellow); }
+.hero-text p { color:var(--gray); font-size:1.05rem; margin-bottom:28px; max-width:440px; }
+.hero-btn { display:inline-flex; align-items:center; gap:8px; padding:14px 32px; background:var(--yellow); color:var(--dark); font-weight:700; font-size:1rem; border-radius:40px; border:2px solid var(--dark); cursor:pointer; font-family:inherit; transition:all 0.25s; text-decoration:none; }
+.hero-btn:hover { background:var(--dark); color:var(--yellow); transform:translateY(-2px); box-shadow:var(--shadow-lg); }
+.hero-visual { position:relative; display:flex; justify-content:center; align-items:center; min-height:340px; }
+.hero-illust { width:100%; max-width:420px; aspect-ratio:1; background:linear-gradient(135deg, var(--teal-light) 0%, var(--yellow-light) 100%); border-radius:40% 60% 60% 40% / 60% 30% 70% 40%; display:flex; align-items:center; justify-content:center; position:relative; animation:float 4s ease-in-out infinite; }
+.hero-illust .emoji-big { font-size:5rem; }
+.hero-float { position:absolute; padding:10px 16px; background:var(--white); border-radius:var(--radius); box-shadow:var(--shadow-lg); font-size:0.82rem; font-weight:600; }
+.hero-float.f1 { top:10%; right:0; animation:float 3s ease-in-out 0.5s infinite; }
+.hero-float.f2 { bottom:15%; left:0; animation:float 3.5s ease-in-out 1s infinite; }
+.hero-float .dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px; }
+.hero-float .dot.green { background:var(--green); }
+.hero-float .dot.blue { background:var(--blue); }
+
+/* ===== VALUE CARDS ===== */
+.values { padding:60px 0; background:var(--gray-light); }
+.values .container > .text-center { margin-bottom:40px; }
+.values-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+.value-card { background:var(--white); border-radius:var(--radius); padding:32px 28px; text-align:center; box-shadow:var(--shadow); transition:all 0.3s; border:1px solid transparent; }
+.value-card:hover { transform:translateY(-6px); box-shadow:var(--shadow-lg); border-color:var(--yellow); }
+.value-icon { width:56px; height:56px; border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:1.6rem; margin:0 auto 18px; }
+.value-icon.v1 { background:var(--yellow-light); }
+.value-icon.v2 { background:var(--teal-light); }
+.value-icon.v3 { background:#FEE2E2; }
+.value-card h3 { font-size:1.15rem; font-weight:700; margin-bottom:8px; }
+.value-card p { color:var(--gray); font-size:0.9rem; }
+
+/* ===== EXPLORE SKILLS ===== */
+.explore { padding:70px 0; }
+.explore .text-center { margin-bottom:32px; }
+.cat-filters { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-bottom:32px; }
+.cat-pill { padding:9px 22px; border-radius:30px; font-size:0.88rem; font-weight:500; border:1.5px solid var(--gray-border); background:var(--white); color:var(--gray); cursor:pointer; transition:all 0.2s; font-family:inherit; }
+.cat-pill:hover { border-color:var(--yellow); color:var(--dark); }
+.cat-pill.active { background:var(--teal); color:var(--white); border-color:var(--teal); }
+.skill-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; margin-bottom:36px; }
+.skill-card { border-radius:var(--radius); border:1px solid var(--gray-border); overflow:hidden; transition:all 0.3s; background:var(--white); }
+.skill-card:hover { transform:translateY(-4px); box-shadow:var(--shadow-lg); }
+.skill-img { height:170px; background:var(--gray-light); display:flex; align-items:center; justify-content:center; font-size:3rem; position:relative; overflow:hidden; }
+.skill-img .overlay-tag { position:absolute; top:12px; left:12px; padding:4px 12px; border-radius:20px; font-size:0.72rem; font-weight:600; background:var(--white); color:var(--teal); }
+.skill-body { padding:18px 20px; }
+.skill-meta { display:flex; gap:14px; font-size:0.78rem; color:var(--gray); margin-bottom:8px; }
+.skill-body h4 { font-size:1.05rem; font-weight:700; margin-bottom:4px; }
+.skill-body .price { color:var(--yellow-hover); font-weight:800; font-size:1.15rem; }
+.skill-body .tutor-row { display:flex; align-items:center; gap:8px; margin-top:10px; }
+.mini-avatar { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.65rem; font-weight:700; color:var(--white); }
+.skill-body .tutor-row span { font-size:0.82rem; color:var(--gray); }
+.skill-body .level-badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:0.72rem; font-weight:600; margin-top:6px; }
+.level-badge.beginner { background:#DCFCE7; color:#166534; }
+.level-badge.intermediate { background:#DBEAFE; color:#1E40AF; }
+.level-badge.advanced { background:#F3E8FF; color:#6B21A8; }
+.explore .text-center button { margin-top:10px; }
+
+/* ===== TESTIMONIALS ===== */
+.testimonials { padding:70px 0; background:var(--gray-light); }
+.test-header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:32px; }
+.test-nav { display:flex; gap:8px; }
+.test-nav button { width:42px; height:42px; border-radius:50%; border:none; background:var(--yellow); color:var(--dark); font-size:1.1rem; cursor:pointer; font-weight:700; transition:all 0.2s; }
+.test-nav button:hover { background:var(--dark); color:var(--yellow); }
+.test-grid { display:grid; grid-template-columns:1fr 1fr; gap:22px; }
+.test-card { background:var(--white); border-radius:var(--radius); padding:28px; border:1px solid var(--gray-border); position:relative; }
+.test-card .quote-mark { font-family:'Playfair Display',serif; font-size:3rem; color:var(--teal); line-height:1; margin-bottom:8px; }
+.test-card p { color:var(--gray); font-size:0.92rem; margin-bottom:18px; font-style:italic; }
+.test-card .author { display:flex; align-items:center; gap:12px; }
+.test-card .author-avatar { width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; color:var(--white); font-size:0.85rem; }
+.test-card .author-info strong { font-size:0.9rem; display:block; }
+.test-card .author-info span { font-size:0.8rem; color:var(--gray); }
+
+/* ===== FAQ ===== */
+.faq { padding:70px 0; }
+.faq .container { display:grid; grid-template-columns:1fr 1.2fr; gap:48px; align-items:flex-start; }
+.faq-list { display:flex; flex-direction:column; gap:10px; }
+.faq-item { border:1px solid var(--gray-border); border-radius:var(--radius-sm); overflow:hidden; }
+.faq-q { padding:16px 20px; font-weight:600; font-size:0.95rem; cursor:pointer; display:flex; justify-content:space-between; align-items:center; background:var(--white); transition:background 0.2s; }
+.faq-q:hover { background:var(--gray-light); }
+.faq-q .arrow { font-size:1.2rem; color:var(--gray); transition:transform 0.3s; }
+.faq-item.open .faq-q .arrow { transform:rotate(180deg); }
+.faq-a { max-height:0; overflow:hidden; transition:max-height 0.35s ease, padding 0.35s ease; padding:0 20px; }
+.faq-item.open .faq-a { max-height:200px; padding:0 20px 16px; }
+.faq-a p { color:var(--gray); font-size:0.9rem; }
+
+/* ===== COMMUNITY CTA ===== */
+.community-cta { padding:70px 0 0; }
+.cta-box { background:var(--teal); border-radius:24px; padding:56px 48px; text-align:center; position:relative; overflow:hidden; }
+.cta-box::before { content:''; position:absolute; top:-40px; right:-40px; width:200px; height:200px; background:rgba(255,255,255,0.06); border-radius:50%; }
+.cta-box::after { content:''; position:absolute; bottom:-60px; left:-30px; width:160px; height:160px; background:rgba(255,255,255,0.04); border-radius:50%; }
+.cta-box h2 { color:var(--white); font-size:clamp(1.5rem,3vw,2.2rem); font-weight:800; margin-bottom:10px; position:relative; }
+.cta-box p { color:rgba(255,255,255,0.8); margin-bottom:24px; position:relative; }
+.cta-form { display:flex; gap:0; max-width:440px; margin:0 auto; position:relative; background:var(--white); border-radius:40px; overflow:hidden; padding:4px; }
+.cta-form input { flex:1; padding:12px 20px; border:none; font-size:0.92rem; font-family:inherit; background:transparent; outline:none; }
+.cta-form button { padding:12px 28px; border:none; background:var(--yellow); color:var(--dark); font-weight:700; border-radius:30px; cursor:pointer; font-family:inherit; font-size:0.9rem; white-space:nowrap; }
+.cta-floats { position:absolute; top:16px; left:32px; width:40px; height:40px; background:var(--yellow); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1rem; animation:float 3s ease-in-out infinite; }
+.cta-floats.r { left:auto; right:32px; top:auto; bottom:24px; background:rgba(255,255,255,0.15); animation-delay:1s; }
+
+/* ===== FOOTER ===== */
+.footer { margin-top:70px; background:var(--yellow); color:var(--dark); padding:48px 0 0; }
+.footer-grid { display:grid; grid-template-columns:1.5fr 1fr 1fr 1fr 1.2fr; gap:32px; margin-bottom:36px; }
+.footer-brand .logo { font-weight:800; font-size:1.2rem; margin-bottom:10px; display:flex; align-items:center; gap:8px; }
+.footer-brand .logo .logo-icon { background:var(--dark); color:var(--yellow); }
+.footer-brand p { font-size:0.85rem; color:var(--dark2); max-width:220px; margin-bottom:16px; }
+.app-badges { display:flex; gap:8px; }
+.app-badge { padding:8px 14px; background:var(--dark); color:var(--white); border-radius:8px; font-size:0.7rem; font-weight:600; display:flex; align-items:center; gap:6px; }
+.app-badge .badge-icon { font-size:1rem; }
+.footer h5 { font-weight:700; font-size:0.9rem; margin-bottom:14px; color:var(--teal-dark); }
+.footer ul { list-style:none; }
+.footer li { margin-bottom:8px; }
+.footer li a { color:var(--dark2); text-decoration:none; font-size:0.85rem; transition:color 0.2s; }
+.footer li a:hover { color:var(--dark); }
+.footer-contact p { font-size:0.85rem; color:var(--dark2); display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+.footer-bottom { border-top:1px solid rgba(0,0,0,0.12); padding:18px 0; display:flex; justify-content:space-between; font-size:0.82rem; color:var(--dark2); }
+.footer-bottom a { color:var(--dark2); text-decoration:none; margin-left:16px; }
+.footer-bottom a:hover { color:var(--dark); }
+
+/* ===== INNER PAGES ===== */
+
+/* PROFILE PAGE */
+.profile-hero { padding:40px 0; background:var(--gray-light); }
+.profile-top { display:flex; gap:24px; align-items:flex-start; }
+.profile-avatar { width:90px; height:90px; border-radius:24px; display:flex; align-items:center; justify-content:center; font-size:1.8rem; font-weight:800; color:var(--white); flex-shrink:0; }
+.profile-info h2 { font-size:1.5rem; font-weight:800; }
+.profile-info .verified { color:var(--teal); font-size:0.85rem; font-weight:600; }
+.profile-info .bio { color:var(--gray); font-size:0.92rem; margin:6px 0 10px; }
+.profile-tags { display:flex; gap:6px; flex-wrap:wrap; }
+.profile-tag { padding:5px 14px; border-radius:20px; font-size:0.8rem; font-weight:500; background:var(--teal-light); color:var(--teal); }
+.profile-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin:28px 0; }
+.stat-box { background:var(--white); border-radius:var(--radius-sm); padding:16px; text-align:center; border:1px solid var(--gray-border); }
+.stat-box .num { font-size:1.5rem; font-weight:800; color:var(--teal); }
+.stat-box .label { font-size:0.78rem; color:var(--gray); }
+
+/* Schedule */
+.schedule-section { padding:36px 0; }
+.schedule-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin-top:16px; }
+.day-col h5 { font-size:0.82rem; font-weight:600; text-align:center; margin-bottom:8px; color:var(--dark); }
+.slot { padding:10px 8px; border-radius:var(--radius-sm); text-align:center; font-size:0.78rem; font-weight:500; cursor:pointer; transition:all 0.2s; margin-bottom:6px; }
+.slot.open { background:var(--teal-light); color:var(--teal); border:1px solid rgba(26,143,127,0.2); }
+.slot.open:hover { background:var(--teal); color:var(--white); }
+.slot.taken { background:var(--gray-light); color:var(--gray); border:1px solid var(--gray-border); text-decoration:line-through; cursor:default; }
+.slot.selected { background:var(--yellow); color:var(--dark); border-color:var(--yellow); font-weight:700; }
+
+/* Session details */
+.session-info { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:20px 0; }
+.info-block { padding:16px; background:var(--gray-light); border-radius:var(--radius-sm); }
+.info-block .lbl { font-size:0.75rem; color:var(--gray); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px; }
+.info-block .val { font-size:0.95rem; font-weight:600; }
+
+/* Action buttons */
+.action-row { display:flex; gap:10px; flex-wrap:wrap; margin:20px 0; }
+.btn-primary { padding:12px 28px; background:var(--yellow); color:var(--dark); border:2px solid var(--dark); font-weight:700; border-radius:30px; cursor:pointer; font-family:inherit; font-size:0.92rem; transition:all 0.2s; }
+.btn-primary:hover { background:var(--dark); color:var(--yellow); }
+.btn-outline { padding:12px 24px; background:transparent; color:var(--teal); border:2px solid var(--teal); font-weight:600; border-radius:30px; cursor:pointer; font-family:inherit; font-size:0.92rem; transition:all 0.2s; }
+.btn-outline:hover { background:var(--teal); color:var(--white); }
+.btn-save { padding:12px 24px; background:transparent; color:var(--red); border:2px solid var(--red); font-weight:600; border-radius:30px; cursor:pointer; font-family:inherit; font-size:0.92rem; transition:all 0.2s; }
+.btn-save:hover { background:var(--red); color:var(--white); }
+
+/* REVIEWS on profile */
+.reviews-section { padding:36px 0; border-top:1px solid var(--gray-border); }
+.review-item { padding:18px 0; border-bottom:1px solid var(--gray-border); }
+.review-item:last-child { border-bottom:none; }
+.review-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+.review-head .reviewer { font-weight:600; font-size:0.92rem; }
+.review-head .date { font-size:0.8rem; color:var(--gray); }
+.review-stars { color:var(--yellow); letter-spacing:2px; margin-bottom:4px; }
+.review-text { color:var(--gray); font-size:0.9rem; }
+
+/* CHAT PAGE */
+.chat-page-wrap { padding:30px 0 60px; }
+.chat-container { display:grid; grid-template-columns:280px 1fr; gap:20px; min-height:500px; }
+.chat-sidebar { background:var(--gray-light); border-radius:var(--radius); padding:16px; border:1px solid var(--gray-border); }
+.chat-sidebar h4 { font-size:0.92rem; font-weight:700; margin-bottom:14px; }
+.chat-contact { display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:var(--radius-sm); cursor:pointer; transition:background 0.2s; margin-bottom:4px; }
+.chat-contact:hover, .chat-contact.active { background:var(--white); }
+.chat-contact .contact-avatar { width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--white); font-weight:700; font-size:0.8rem; flex-shrink:0; }
+.chat-contact .contact-info { min-width:0; }
+.chat-contact .contact-info strong { font-size:0.85rem; display:block; }
+.chat-contact .contact-info span { font-size:0.75rem; color:var(--gray); display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.chat-main { background:var(--white); border-radius:var(--radius); border:1px solid var(--gray-border); display:flex; flex-direction:column; }
+.chat-header { padding:14px 20px; border-bottom:1px solid var(--gray-border); display:flex; align-items:center; gap:12px; }
+.chat-header strong { font-size:0.95rem; }
+.chat-header .status-dot { width:8px; height:8px; border-radius:50%; background:var(--green); }
+.chat-messages { flex:1; padding:20px; overflow-y:auto; display:flex; flex-direction:column; gap:10px; }
+.msg { max-width:70%; padding:12px 16px; border-radius:16px; font-size:0.9rem; line-height:1.5; }
+.msg.them { background:var(--gray-light); color:var(--dark); align-self:flex-start; border-bottom-left-radius:4px; }
+.msg.me { background:var(--teal); color:var(--white); align-self:flex-end; border-bottom-right-radius:4px; }
+.msg .time { font-size:0.7rem; opacity:0.6; margin-top:4px; display:block; }
+.chat-input-bar { padding:14px 20px; border-top:1px solid var(--gray-border); display:flex; gap:10px; }
+.chat-input-bar input { flex:1; padding:10px 16px; border:1px solid var(--gray-border); border-radius:30px; font-family:inherit; font-size:0.9rem; outline:none; }
+.chat-input-bar input:focus { border-color:var(--teal); }
+.chat-input-bar button { padding:10px 24px; border:none; background:var(--yellow); color:var(--dark); font-weight:700; border-radius:30px; cursor:pointer; font-family:inherit; }
+
+/* FEEDBACK PAGE */
+.feedback-page { padding:40px 0 60px; max-width:640px; margin:0 auto; }
+.feedback-card { background:var(--white); border:1px solid var(--gray-border); border-radius:var(--radius); padding:32px; }
+.feedback-card h3 { font-size:1.3rem; font-weight:700; margin-bottom:4px; }
+.feedback-card .session-ref { color:var(--gray); font-size:0.88rem; margin-bottom:24px; }
+.stars-select { display:flex; gap:6px; margin-bottom:20px; }
+.star-btn { width:44px; height:44px; border-radius:12px; border:2px solid var(--gray-border); background:var(--white); font-size:1.2rem; cursor:pointer; transition:all 0.15s; }
+.star-btn:hover, .star-btn.active { background:var(--yellow); border-color:var(--yellow); transform:scale(1.1); }
+.tag-select { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
+.tag-btn { padding:8px 16px; border-radius:20px; border:1.5px solid var(--gray-border); background:var(--white); font-size:0.85rem; cursor:pointer; font-family:inherit; transition:all 0.2s; }
+.tag-btn:hover, .tag-btn.active { border-color:var(--teal); background:var(--teal-light); color:var(--teal); }
+.feedback-textarea { width:100%; padding:14px 16px; border:1px solid var(--gray-border); border-radius:var(--radius-sm); font-family:inherit; font-size:0.92rem; min-height:100px; resize:vertical; margin-bottom:20px; outline:none; }
+.feedback-textarea:focus { border-color:var(--teal); }
+
+/* COMMUNITY BOARD PAGE */
+.board-page { padding:40px 0 60px; }
+.board-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; }
+.post-card { background:var(--white); border:1px solid var(--gray-border); border-radius:var(--radius); padding:22px; margin-bottom:14px; transition:all 0.2s; }
+.post-card:hover { border-color:var(--teal); }
+.post-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px; }
+.post-top h4 { font-size:1rem; font-weight:700; }
+.post-top .time { font-size:0.78rem; color:var(--gray); white-space:nowrap; }
+.post-card > p { color:var(--gray); font-size:0.9rem; margin-bottom:12px; }
+.post-footer { display:flex; gap:10px; }
+.post-btn { padding:6px 14px; border-radius:20px; font-size:0.8rem; border:1px solid var(--gray-border); background:var(--white); cursor:pointer; font-family:inherit; transition:all 0.2s; }
+.post-btn:hover { border-color:var(--teal); color:var(--teal); }
+.post-btn.help { background:var(--teal-light); border-color:var(--teal); color:var(--teal); font-weight:600; }
+
+/* BOOKMARKS PAGE */
+.bookmarks-page { padding:40px 0 60px; }
+
+/* RESPONSIVE */
+@media(max-width:900px) {
+  .hero .container { grid-template-columns:1fr; text-align:center; }
+  .hero-text p { margin:0 auto 28px; }
+  .hero-visual { min-height:240px; }
+  .values-grid, .skill-grid { grid-template-columns:1fr; }
+  .test-grid { grid-template-columns:1fr; }
+  .faq .container { grid-template-columns:1fr; }
+  .footer-grid { grid-template-columns:1fr 1fr; gap:24px; }
+  .chat-container { grid-template-columns:1fr; }
+  .chat-sidebar { display:none; }
+  .nav-links { display:none; }
+  .profile-stats { grid-template-columns:repeat(2,1fr); }
+  .schedule-grid { grid-template-columns:repeat(3,1fr); }
+  .session-info { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar">
+  <div class="container">
+    <a class="nav-logo" onclick="goPage('home')">
+      <span class="logo-icon">⚡</span> SkillSwap
+    </a>
+    <div class="nav-links">
+      <button class="nav-link active" data-nav="home" onclick="goPage('home')">Home</button>
+      <button class="nav-link" data-nav="profile" onclick="goPage('profile')">Profile</button>
+      <button class="nav-link" data-nav="chat" onclick="goPage('chat')">Messages</button>
+      <button class="nav-link" data-nav="board" onclick="goPage('board')">Community</button>
+      <button class="nav-link" data-nav="bookmarks" onclick="goPage('bookmarks')">Saved</button>
+      <button class="nav-link" data-nav="feedback" onclick="goPage('feedback')">Feedback</button>
+      <button class="nav-cta">Sign Up Free</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ============================= -->
+<!-- PAGE: HOME (Landing Page)     -->
+<!-- ============================= -->
+<div class="page active" id="page-home">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-text">
+      <h1>Exchange <span class="hl">Your Skills</span><br>With SkillSwap!</h1>
+      <p>You have a skill, right? Maybe you're good taking pictures, coding, or you can teach some language. Exchange that knowledge! SkillSwap is here for establishing that connection! Make your match — in person or online!</p>
+      <a class="hero-btn" onclick="goPage('profile')">Find a Skill Partner →</a>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-illust"><span class="emoji-big">🤝</span></div>
+      <div class="hero-float f1"><span class="dot green"></span> 800+ Active Students</div>
+      <div class="hero-float f2"><span class="dot blue"></span> 12 Skill Categories</div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUES -->
+<section class="values">
+  <div class="container">
+    <div class="text-center">
+      <h2 class="section-title">Learn <span class="accent">Something New</span> For Free!</h2>
+      <p class="section-sub center">Get a new friend that will manage to help you achieve your goal!</p>
+    </div>
+    <div class="values-grid" style="margin-top:36px;">
+      <div class="value-card">
+        <div class="value-icon v1">📚</div>
+        <h3>Skill Marketplace</h3>
+        <p>Browse a diverse catalog of skills and knowledge areas, from cooking and coding to photography and foreign languages. Find what piques your interest.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon v2">🔗</div>
+        <h3>New Interface</h3>
+        <p>Connect with people who share your passion for learning and teaching. Propose skill swaps, schedule sessions, and get ready to trade knowledge.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon v3">💡</div>
+        <h3>SkillSwap Community</h3>
+        <p>It's all about the joy of learning and sharing. No matter your skill level, you can be a valuable contributor and learner in this vibrant community.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPLORE SKILLS -->
+<section class="explore">
+  <div class="container">
+    <div class="text-center">
+      <h2 class="section-title">Explore Our <span class="accent">Skills</span></h2>
+      <p class="section-sub center">Explore a diverse range of skills contributed by passionate learners and experts. Our community-driven platform connects you with the right people to learn from or teach.</p>
+    </div>
+    <div class="cat-filters">
+      <button class="cat-pill active">All</button>
+      <button class="cat-pill">Technology</button>
+      <button class="cat-pill">Design</button>
+      <button class="cat-pill">Lifestyle</button>
+      <button class="cat-pill">Business</button>
+      <button class="cat-pill">Language</button>
+      <button class="cat-pill">Music</button>
+    </div>
+    <div class="skill-grid">
+      <div class="skill-card" onclick="goPage('profile')">
+        <div class="skill-img" style="background:linear-gradient(135deg,#FDE68A,#FCA5A5);">
+          <span>🎨</span>
+          <span class="overlay-tag">Design</span>
+        </div>
+        <div class="skill-body">
+          <div class="skill-meta"><span>📅 12 May, 2026</span><span>⏱ 1 hr 30 min</span></div>
+          <h4>Canva for Beginners</h4>
+          <span class="level-badge beginner">Beginner</span>
+          <div class="tutor-row">
+            <div class="mini-avatar" style="background:var(--teal);">SL</div>
+            <span>Sarah Lim · ★ 4.8</span>
+          </div>
+        </div>
+      </div>
+      <div class="skill-card" onclick="goPage('profile')">
+        <div class="skill-img" style="background:linear-gradient(135deg,#C4B5FD,#93C5FD);">
+          <span>📄</span>
+          <span class="overlay-tag">Business</span>
+        </div>
+        <div class="skill-body">
+          <div class="skill-meta"><span>📅 15 May, 2026</span><span>⏱ 1 hr 40 min</span></div>
+          <h4>Resume & LinkedIn Writing</h4>
+          <span class="level-badge intermediate">Intermediate</span>
+          <div class="tutor-row">
+            <div class="mini-avatar" style="background:var(--yellow);">DA</div>
+            <span>Darren Ang · ★ 4.2</span>
+          </div>
+        </div>
+      </div>
+      <div class="skill-card" onclick="goPage('profile')">
+        <div class="skill-img" style="background:linear-gradient(135deg,#A7F3D0,#6EE7B7);">
+          <span>🗣️</span>
+          <span class="overlay-tag">Language</span>
+        </div>
+        <div class="skill-body">
+          <div class="skill-meta"><span>📅 18 May, 2026</span><span>⏱ 1 hr</span></div>
+          <h4>Conversational Spanish</h4>
+          <span class="level-badge advanced">Advanced</span>
+          <div class="tutor-row">
+            <div class="mini-avatar" style="background:#EF4444;">MR</div>
+            <span>Maria Reyes · ★ 4.9</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="text-center">
+      <button class="hero-btn" style="font-size:0.9rem; padding:12px 28px;">Get Started →</button>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div class="container">
+    <div class="test-header">
+      <div>
+        <h2 class="section-title"><span class="accent">Swapped Skills,</span> Shared Success</h2>
+      </div>
+      <div class="test-nav">
+        <button>‹</button>
+        <button>›</button>
+      </div>
+    </div>
+    <div class="test-grid">
+      <div class="test-card">
+        <div class="quote-mark">"</div>
+        <p>I swapped my coding skills to learn graphic design, and it was the most refreshing way to learn something new. The community is so supportive, and the process is super smooth!</p>
+        <div class="author">
+          <div class="author-avatar" style="background:var(--teal);">AM</div>
+          <div class="author-info">
+            <strong>Alex M.</strong>
+            <span>Front End Developer</span>
+          </div>
+        </div>
+      </div>
+      <div class="test-card">
+        <div class="quote-mark">"</div>
+        <p>I taught digital illustration and in return, I learned the basics of Python. This platform makes learning feel human — not transactional.</p>
+        <div class="author">
+          <div class="author-avatar" style="background:var(--yellow);">LR</div>
+          <div class="author-info">
+            <strong>Leila R.</strong>
+            <span>Freelance Illustrator</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq">
+  <div class="container">
+    <div>
+      <h2 class="section-title">Got Questions?<br><span class="accent">We've Got Answers</span></h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item open">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          What is Skill Swap and how does it work?
+          <span class="arrow">▾</span>
+        </div>
+        <div class="faq-a"><p>SkillSwap is a peer learning platform where students can offer skills they're good at and learn new ones from fellow students. Simply create a profile, list your skills, browse others, and book a session!</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Is it free to join and use the platform?
+          <span class="arrow">▾</span>
+        </div>
+        <div class="faq-a"><p>Yes, Skill Swap is completely free to use. Just sign up, create your profile, and start connecting with learners and teachers.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          How do I find the right person to swap skills with?
+          <span class="arrow">▾</span>
+        </div>
+        <div class="faq-a"><p>Use our search and filter system to browse by category, skill level, availability, and rating. You can also post requests on the Community Board.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          What types of skills can I exchange?
+          <span class="arrow">▾</span>
+        </div>
+        <div class="faq-a"><p>Anything from programming and design to languages, music, cooking, fitness, and academic subjects. If you can teach it, you can list it!</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMMUNITY CTA -->
+<section class="community-cta">
+  <div class="container">
+    <div class="cta-box">
+      <div class="cta-floats">🎓</div>
+      <div class="cta-floats r">🌍</div>
+      <h2>Become a Part of Our Learning Community</h2>
+      <p>Join a vibrant network of learners and teachers exchanging skills across the globe. Whether you're here to teach, learn, or both — you'll find a place where growth, support, and collaboration come naturally.</p>
+      <div class="cta-form">
+        <input type="email" placeholder="Enter Your Email" />
+        <button>Subscribe</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo">
+          <span class="logo-icon" style="width:30px;height:30px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:0.9rem;">⚡</span>
+          SkillSwap
+        </div>
+        <p>SkillSwap is here for it! For establishing that connection! Make your match! In person or Online!</p>
+        <div class="app-badges">
+          <div class="app-badge"><span class="badge-icon">▶</span> Google Play</div>
+          <div class="app-badge"><span class="badge-icon">🍎</span> App Store</div>
+        </div>
+      </div>
+      <div>
+        <h5>Company</h5>
+        <ul>
+          <li><a href="#">Teams</a></li>
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">Case Study</a></li>
+          <li><a href="#">Career</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Quick Links</h5>
+        <ul>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Help & Support</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Social Links</h5>
+        <ul>
+          <li><a href="#">Facebook</a></li>
+          <li><a href="#">Instagram</a></li>
+          <li><a href="#">LinkedIn</a></li>
+          <li><a href="#">Pinterest</a></li>
+        </ul>
+      </div>
+      <div class="footer-contact">
+        <h5>Contact</h5>
+        <p>📞 +1(408)785-9933</p>
+        <p>✉️ info@skill-swap.com</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>Copyright. All Rights Reserved.</span>
+      <div>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Cookie Policy</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</div><!-- end page-home -->
+
+
+<!-- ============================== -->
+<!-- PAGE: STUDENT PROFILE           -->
+<!-- ============================== -->
+<div class="page" id="page-profile">
+  <section class="profile-hero">
+    <div class="container">
+      <div class="profile-top">
+        <div class="profile-avatar" style="background:linear-gradient(135deg,var(--teal),var(--teal-dark));">DA</div>
+        <div class="profile-info">
+          <h2>Darren Ang <span class="verified">✓ Verified Student</span></h2>
+          <p style="color:var(--gray); font-size:0.88rem;">3rd Year · Faculty of Computing · Quest International University</p>
+          <p class="bio">"I love making Stats less scary. Let's work through problems together! I've been tutoring for 2 semesters and really enjoy seeing lightbulb moments."</p>
+          <div class="profile-tags">
+            <span class="profile-tag">Statistics</span>
+            <span class="profile-tag">R Programming</span>
+            <span class="profile-tag">SPSS</span>
+            <span class="profile-tag">Data Analysis</span>
+            <span class="profile-tag">Excel</span>
+          </div>
+        </div>
+      </div>
+      <div class="profile-stats">
+        <div class="stat-box"><div class="num">4.2</div><div class="label">★ Average Rating</div></div>
+        <div class="stat-box"><div class="num">18</div><div class="label">Sessions Completed</div></div>
+        <div class="stat-box"><div class="num">14</div><div class="label">Unique Students</div></div>
+        <div class="stat-box"><div class="num">96%</div><div class="label">Response Rate</div></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+    <!-- Availability Schedule -->
+    <section class="schedule-section">
+      <h3 class="section-title" style="font-size:1.2rem;">📅 Availability — <span class="accent">Click to Book</span></h3>
+      <p style="color:var(--gray); font-size:0.88rem;">Green slots are open. Click one to select and book.</p>
+      <div class="schedule-grid">
+        <div class="day-col">
+          <h5>Monday</h5>
+          <div class="slot open" onclick="selectSlot(this)">10:00 AM</div>
+          <div class="slot taken">2:00 PM</div>
+          <div class="slot open" onclick="selectSlot(this)">4:00 PM</div>
+        </div>
+        <div class="day-col">
+          <h5>Tuesday</h5>
+          <div class="slot taken">10:00 AM</div>
+          <div class="slot taken">1:00 PM</div>
+        </div>
+        <div class="day-col">
+          <h5>Wednesday</h5>
+          <div class="slot open" onclick="selectSlot(this)">10:00 AM</div>
+          <div class="slot open" onclick="selectSlot(this)">3:00 PM</div>
+        </div>
+        <div class="day-col">
+          <h5>Thursday</h5>
+          <div class="slot taken">11:00 AM</div>
+          <div class="slot open" onclick="selectSlot(this)">2:00 PM</div>
+        </div>
+        <div class="day-col">
+          <h5>Friday</h5>
+          <div class="slot open" onclick="selectSlot(this)">9:00 AM</div>
+          <div class="slot open" onclick="selectSlot(this)">1:00 PM</div>
+          <div class="slot taken">4:00 PM</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Session Details -->
+    <section style="padding-bottom:24px;">
+      <h3 class="section-title" style="font-size:1.2rem;">📋 Learning Session <span class="accent">Details</span></h3>
+      <div class="session-info">
+        <div class="info-block"><div class="lbl">Format</div><div class="val">1-on-1 or Small Group (max 3)</div></div>
+        <div class="info-block"><div class="lbl">Duration</div><div class="val">45 min – 1.5 hours</div></div>
+        <div class="info-block"><div class="lbl">Location</div><div class="val">QIU Library Room 3B / Google Meet</div></div>
+        <div class="info-block"><div class="lbl">Skill Level</div><div class="val"><span class="level-badge intermediate" style="margin:0;">Intermediate</span></div></div>
+      </div>
+      <div class="action-row">
+        <button class="btn-primary" onclick="alert('✅ Booking confirmed! Check your Messages for details.')">📅 Book a Session</button>
+        <button class="btn-outline" onclick="goPage('chat')">💬 Send Inquiry</button>
+        <button class="btn-save" onclick="this.textContent=this.textContent.includes('♡')?'♥ Saved!':'♡ Save Tutor'">♡ Save Tutor</button>
+      </div>
+    </section>
+
+    <!-- Reviews -->
+    <section class="reviews-section">
+      <h3 class="section-title" style="font-size:1.2rem;">⭐ Reviews & <span class="accent">Ratings</span></h3>
+      <div class="review-item">
+        <div class="review-head">
+          <span class="reviewer">Aisha M.</span>
+          <span class="date">2 weeks ago</span>
+        </div>
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">Darren explained regression step-by-step with real exam questions. Really patient when I got confused on ANOVA interpretation. Highly recommend for anyone taking BIT2100!</p>
+      </div>
+      <div class="review-item">
+        <div class="review-head">
+          <span class="reviewer">Priya N.</span>
+          <span class="date">1 month ago</span>
+        </div>
+        <div class="review-stars">★★★★☆</div>
+        <p class="review-text">Great at explaining R programming basics. Would've liked more hands-on exercises but overall very helpful and friendly.</p>
+      </div>
+      <div class="review-item">
+        <div class="review-head">
+          <span class="reviewer">Wei Chen</span>
+          <span class="date">1 month ago</span>
+        </div>
+        <div class="review-stars">★★★★☆</div>
+        <p class="review-text">Helped me prep for my Statistics final. Darren knows his stuff and keeps the session focused. Good use of time.</p>
+      </div>
+    </section>
+  </div>
+</div><!-- end page-profile -->
+
+
+<!-- ============================== -->
+<!-- PAGE: CHAT / MESSAGES           -->
+<!-- ============================== -->
+<div class="page" id="page-chat">
+  <div class="container chat-page-wrap">
+    <h2 class="section-title" style="font-size:1.3rem; margin-bottom:20px;">💬 <span class="accent">Messages</span></h2>
+    <div class="chat-container">
+      <div class="chat-sidebar">
+        <h4>Conversations</h4>
+        <div class="chat-contact active">
+          <div class="contact-avatar" style="background:var(--teal);">DA</div>
+          <div class="contact-info">
+            <strong>Darren Ang</strong>
+            <span>Perfect, those are my strong…</span>
+          </div>
+        </div>
+        <div class="chat-contact">
+          <div class="contact-avatar" style="background:var(--yellow); color:var(--dark);">SL</div>
+          <div class="contact-info">
+            <strong>Sarah Lim</strong>
+            <span>Sure! Let me know your ava…</span>
+          </div>
+        </div>
+        <div class="chat-contact">
+          <div class="contact-avatar" style="background:#EF4444;">KR</div>
+          <div class="contact-info">
+            <strong>Kumar Rajan</strong>
+            <span>See you Thursday!</span>
+          </div>
+        </div>
+      </div>
+      <div class="chat-main">
+        <div class="chat-header">
+          <div class="contact-avatar" style="background:var(--teal); width:36px; height:36px; border-radius:50; display:flex; align-items:center; justify-content:center; color:white; font-weight:700; font-size:0.75rem; border-radius:50%;">DA</div>
+          <strong>Darren Ang</strong>
+          <div class="status-dot"></div>
+          <span style="font-size:0.8rem; color:var(--gray);">Online</span>
+        </div>
+        <div class="chat-messages">
+          <div class="msg them">Hey! I saw you're interested in Stats help. What topics are you covering? <span class="time">2:30 PM</span></div>
+          <div class="msg me">Hi Darren! I'm struggling with regression analysis and ANOVA for my BIT2100 assignment. <span class="time">2:32 PM</span></div>
+          <div class="msg them">Perfect, those are my strong areas. Want to book a session this Wednesday 3PM? I can prep some practice problems. <span class="time">2:33 PM</span></div>
+          <div class="msg me">That works! Booking now 🙌 <span class="time">2:34 PM</span></div>
+          <div class="msg them">Great! I'll send you some pre-reading material. See you Wed! <span class="time">2:35 PM</span></div>
+        </div>
+        <div class="chat-input-bar">
+          <input type="text" placeholder="Type a message…" id="chatInput" onkeydown="if(event.key==='Enter')sendMsg()" />
+          <button onclick="sendMsg()">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><!-- end page-chat -->
+
+
+<!-- ============================== -->
+<!-- PAGE: POST-SESSION FEEDBACK     -->
+<!-- ============================== -->
+<div class="page" id="page-feedback">
+  <div class="container feedback-page">
+    <h2 class="section-title" style="font-size:1.3rem; margin-bottom:20px;">⭐ Post-Session <span class="accent">Feedback</span></h2>
+    <div class="feedback-card">
+      <h3>Rate Your Session with Darren Ang</h3>
+      <p class="session-ref">Statistics – Regression & ANOVA · Wed, 3:00 PM · 1 hour</p>
+
+      <label style="font-weight:600; font-size:0.9rem; display:block; margin-bottom:8px;">Overall Rating</label>
+      <div class="stars-select">
+        <button class="star-btn active" onclick="setStars(1)">★</button>
+        <button class="star-btn active" onclick="setStars(2)">★</button>
+        <button class="star-btn active" onclick="setStars(3)">★</button>
+        <button class="star-btn active" onclick="setStars(4)">★</button>
+        <button class="star-btn" onclick="setStars(5)">★</button>
+      </div>
+
+      <label style="font-weight:600; font-size:0.9rem; display:block; margin-bottom:8px;">What went well? (select all that apply)</label>
+      <div class="tag-select">
+        <button class="tag-btn active" onclick="this.classList.toggle('active')">Clear explanations</button>
+        <button class="tag-btn" onclick="this.classList.toggle('active')">Patient</button>
+        <button class="tag-btn active" onclick="this.classList.toggle('active')">Well-prepared</button>
+        <button class="tag-btn" onclick="this.classList.toggle('active')">Good examples</button>
+        <button class="tag-btn active" onclick="this.classList.toggle('active')">On time</button>
+        <button class="tag-btn" onclick="this.classList.toggle('active')">Friendly</button>
+        <button class="tag-btn" onclick="this.classList.toggle('active')">Interactive</button>
+      </div>
+
+      <label style="font-weight:600; font-size:0.9rem; display:block; margin-bottom:8px;">Write a review (optional)</label>
+      <textarea class="feedback-textarea" placeholder="Tell other students about your experience...">Darren explained regression step-by-step with real exam questions. Really patient when I got confused. Highly recommend!</textarea>
+
+      <div class="action-row">
+        <button class="btn-primary" onclick="alert('✅ Review submitted! Thank you for your feedback.')">Submit Review</button>
+        <button class="btn-outline" onclick="goPage('home')">Skip for Now</button>
+      </div>
+    </div>
+  </div>
+</div><!-- end page-feedback -->
+
+
+<!-- ============================== -->
+<!-- PAGE: COMMUNITY BOARD           -->
+<!-- ============================== -->
+<div class="page" id="page-board">
+  <div class="container board-page">
+    <div class="board-header">
+      <div>
+        <h2 class="section-title" style="font-size:1.3rem;">🏘️ Community <span class="accent">Board</span></h2>
+        <p style="color:var(--gray); font-size:0.88rem;">Post skill requests, find study groups, or offer help.</p>
+      </div>
+      <button class="btn-primary">+ Post a Request</button>
+    </div>
+
+    <div class="post-card">
+      <div class="post-top">
+        <h4>🆘 Need help with Java OOP concepts</h4>
+        <span class="time">2 hours ago · Aisha M.</span>
+      </div>
+      <p>Struggling with inheritance and polymorphism for my BIT1023 assignment. Anyone free this week? Willing to trade Python help in return!</p>
+      <div class="post-footer">
+        <button class="post-btn">💬 Reply (3)</button>
+        <button class="post-btn help">🙋 I Can Help</button>
+        <button class="post-btn" onclick="this.textContent=this.textContent.includes('Save')?'✓ Saved':'🔖 Save'">🔖 Save</button>
+      </div>
+    </div>
+
+    <div class="post-card">
+      <div class="post-top">
+        <h4>🎸 Guitar lessons in exchange for Mandarin practice</h4>
+        <span class="time">5 hours ago · Wei Chen</span>
+      </div>
+      <p>Intermediate guitarist looking for a Mandarin conversation partner. Happy to meet on campus or online — flexible schedule!</p>
+      <div class="post-footer">
+        <button class="post-btn">💬 Reply (1)</button>
+        <button class="post-btn help">🙋 I Can Help</button>
+        <button class="post-btn">🔖 Save</button>
+      </div>
+    </div>
+
+    <div class="post-card">
+      <div class="post-top">
+        <h4>📊 Group study for BIT2100 Statistics final</h4>
+        <span class="time">1 day ago · Priya Nair</span>
+      </div>
+      <p>Forming a study group for the Stats final. Need 2-3 more people. We meet Saturdays 10 AM at the library. Bring your past year papers!</p>
+      <div class="post-footer">
+        <button class="post-btn">💬 Reply (7)</button>
+        <button class="post-btn help">🙋 Join Group</button>
+        <button class="post-btn">🔖 Save</button>
+      </div>
+    </div>
+
+    <div class="post-card">
+      <div class="post-top">
+        <h4>🐍 Looking for Python tutor — will teach Photoshop</h4>
+        <span class="time">2 days ago · Jason Lee</span>
+      </div>
+      <p>Need someone to walk me through Python basics (loops, functions, file handling). I'm pretty good at Photoshop and can teach in return.</p>
+      <div class="post-footer">
+        <button class="post-btn">💬 Reply (4)</button>
+        <button class="post-btn help">🙋 I Can Help</button>
+        <button class="post-btn">🔖 Save</button>
+      </div>
+    </div>
+  </div>
+</div><!-- end page-board -->
+
+
+<!-- ============================== -->
+<!-- PAGE: SAVED / BOOKMARKS         -->
+<!-- ============================== -->
+<div class="page" id="page-bookmarks">
+  <div class="container bookmarks-page">
+    <h2 class="section-title" style="font-size:1.3rem; margin-bottom:6px;">♡ Saved <span class="accent">Tutors & Skills</span></h2>
+    <p style="color:var(--gray); font-size:0.88rem; margin-bottom:28px;">Your bookmarked peers for quick access.</p>
+
+    <div class="skill-grid">
+      <div class="skill-card" onclick="goPage('profile')">
+        <div class="skill-img" style="background:linear-gradient(135deg,var(--teal-light),#C4B5FD);">
+          <span>📊</span>
+        </div>
+        <div class="skill-body">
+          <h4>Statistics & R Programming</h4>
+          <span class="level-badge intermediate">Intermediate</span>
+          <div class="tutor-row">
+            <div class="mini-avatar" style="background:var(--teal);">DA</div>
+            <span>Darren Ang · ★ 4.2 · 18 sessions</span>
+          </div>
+          <div style="display:flex; gap:8px; margin-top:12px;">
+            <button class="btn-primary" style="padding:8px 18px; font-size:0.82rem; border-width:1.5px;">Book Again</button>
+            <button class="btn-save" style="padding:8px 16px; font-size:0.82rem; border-width:1.5px;" onclick="event.stopPropagation(); this.textContent='Removed!'">♥ Unsave</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="skill-card" onclick="goPage('profile')">
+        <div class="skill-img" style="background:linear-gradient(135deg,#FDE68A,#FCA5A5);">
+          <span>🎨</span>
+        </div>
+        <div class="skill-body">
+          <h4>UI/UX Design (Figma)</h4>
+          <span class="level-badge advanced">Advanced</span>
+          <div class="tutor-row">
+            <div class="mini-avatar" style="background:var(--yellow); color:var(--dark);">SL</div>
+            <span>Sarah Lim · ★ 4.8 · 32 sessions</span>
+          </div>
+          <div style="display:flex; gap:8px; margin-top:12px;">
+            <button class="btn-primary" style="padding:8px 18px; font-size:0.82rem; border-width:1.5px;">Book Again</button>
+            <button class="btn-save" style="padding:8px 16px; font-size:0.82rem; border-width:1.5px;" onclick="event.stopPropagation(); this.textContent='Removed!'">♥ Unsave</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="skill-card" onclick="goPage('profile')">
+        <div class="skill-img" style="background:linear-gradient(135deg,#A7F3D0,#93C5FD);">
+          <span>🐍</span>
+        </div>
+        <div class="skill-body">
+          <h4>Python & Machine Learning</h4>
+          <span class="level-badge beginner">Beginner-Friendly</span>
+          <div class="tutor-row">
+            <div class="mini-avatar" style="background:#EF4444;">KR</div>
+            <span>Kumar Rajan · ★ 4.0 · 11 sessions</span>
+          </div>
+          <div style="display:flex; gap:8px; margin-top:12px;">
+            <button class="btn-primary" style="padding:8px 18px; font-size:0.82rem; border-width:1.5px;">Book Again</button>
+            <button class="btn-save" style="padding:8px 16px; font-size:0.82rem; border-width:1.5px;" onclick="event.stopPropagation(); this.textContent='Removed!'">♥ Unsave</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><!-- end page-bookmarks -->
+
+
+<script>
+// Page navigation
+function goPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  const navBtn = document.querySelector(`.nav-link[data-nav="${id}"]`);
+  if (navBtn) navBtn.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// FAQ accordion
+function toggleFaq(el) {
+  const item = el.parentElement;
+  const wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+  if (!wasOpen) item.classList.add('open');
+}
+
+// Category filter pills
+document.querySelectorAll('.cat-pill').forEach(pill => {
+  pill.addEventListener('click', () => {
+    document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+    pill.classList.add('active');
+  });
+});
+
+// Slot selection
+function selectSlot(el) {
+  document.querySelectorAll('.slot.selected').forEach(s => { s.classList.remove('selected'); s.classList.add('open'); });
+  el.classList.remove('open');
+  el.classList.add('selected');
+}
+
+// Star rating
+function setStars(n) {
+  document.querySelectorAll('.star-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', i < n);
+  });
+}
+
+// Chat send
+function sendMsg() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text) return;
+  const container = document.querySelector('.chat-messages');
+  const msg = document.createElement('div');
+  msg.className = 'msg me';
+  const now = new Date();
+  msg.innerHTML = text + `<span class="time">${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}</span>`;
+  container.appendChild(msg);
+  input.value = '';
+  container.scrollTop = container.scrollHeight;
+  // Simulate reply
+  setTimeout(() => {
+    const reply = document.createElement('div');
+    reply.className = 'msg them';
+    reply.innerHTML = 'Got it! I\'ll prepare materials for that topic. See you at the session! 👍 <span class="time">' + now.getHours() + ':' + String(now.getMinutes() + 1).padStart(2,'0') + '</span>';
+    container.appendChild(reply);
+    container.scrollTop = container.scrollHeight;
+  }, 1200);
+}
+</script>
+</body>
+</html>
