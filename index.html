@@ -285,6 +285,39 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
 /* BOOKMARKS PAGE */
 .bookmarks-page { padding:40px 0 60px; }
 
+/* SEARCH BAR */
+.search-bar-wrap { display:flex; justify-content:center; margin-bottom:28px; }
+.search-bar { display:flex; align-items:center; gap:0; background:var(--white); border:2px solid var(--gray-border); border-radius:40px; padding:4px 4px 4px 20px; max-width:480px; width:100%; transition:border-color 0.2s; }
+.search-bar:focus-within { border-color:var(--teal); }
+.search-bar input { flex:1; border:none; outline:none; font-family:inherit; font-size:0.92rem; background:transparent; padding:10px 0; }
+.search-bar button { padding:10px 22px; border:none; background:var(--teal); color:var(--white); font-weight:700; border-radius:30px; cursor:pointer; font-family:inherit; font-size:0.88rem; transition:all 0.2s; }
+.search-bar button:hover { background:var(--teal-dark); }
+.no-results { text-align:center; padding:48px 20px; color:var(--gray); font-size:1rem; display:none; }
+.no-results .nr-icon { font-size:2.5rem; margin-bottom:12px; }
+
+/* MODAL OVERLAY */
+.modal-overlay { display:none; position:fixed; inset:0; z-index:200; background:rgba(0,0,0,0.45); backdrop-filter:blur(4px); align-items:center; justify-content:center; }
+.modal-overlay.show { display:flex; }
+.modal-card { background:var(--white); border-radius:var(--radius); padding:36px 32px; max-width:500px; width:90%; position:relative; animation:confirmPop 0.3s ease; }
+.modal-card h3 { font-size:1.2rem; font-weight:700; margin-bottom:4px; }
+.modal-card .modal-sub { color:var(--gray); font-size:0.88rem; margin-bottom:24px; }
+.modal-card .close-modal { position:absolute; top:16px; right:18px; background:none; border:none; font-size:1.3rem; cursor:pointer; color:var(--gray); transition:color 0.2s; }
+.modal-card .close-modal:hover { color:var(--dark); }
+.form-group { margin-bottom:16px; }
+.form-group label { font-weight:600; font-size:0.88rem; display:block; margin-bottom:6px; }
+.form-group input, .form-group select, .form-group textarea { width:100%; padding:11px 16px; border:1.5px solid var(--gray-border); border-radius:var(--radius-sm); font-family:inherit; font-size:0.9rem; outline:none; transition:border-color 0.2s; }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color:var(--teal); }
+.form-group textarea { min-height:80px; resize:vertical; }
+
+/* REVIEW CONFIRMED PAGE */
+.confirmed-page { padding:80px 0 60px; display:flex; align-items:center; justify-content:center; min-height:60vh; }
+.confirmed-card { text-align:center; background:var(--white); border:1px solid var(--gray-border); border-radius:var(--radius); padding:48px 40px; max-width:480px; width:100%; }
+.confirmed-icon { width:88px; height:88px; border-radius:50%; background:linear-gradient(135deg,#34D399,#10B981); display:inline-flex; align-items:center; justify-content:center; margin-bottom:24px; animation:confirmPop 0.5s cubic-bezier(0.175,0.885,0.32,1.275); }
+.confirmed-icon svg { width:44px; height:44px; stroke:#fff; stroke-width:3; fill:none; stroke-linecap:round; stroke-linejoin:round; }
+.confirmed-card h2 { font-size:1.5rem; font-weight:700; margin-bottom:8px; color:var(--dark); }
+.confirmed-card p { color:var(--gray); font-size:0.95rem; margin-bottom:28px; }
+@keyframes confirmPop { 0% { transform:scale(0); opacity:0; } 60% { transform:scale(1.15); } 100% { transform:scale(1); opacity:1; } }
+
 /* RESPONSIVE */
 @media(max-width:900px) {
   .hero .container { grid-template-columns:1fr; text-align:center; }
@@ -379,16 +412,22 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
       <p class="section-sub center">Explore a diverse range of skills contributed by passionate learners and experts. Our community-driven platform connects you with the right people to learn from or teach.</p>
     </div>
     <div class="cat-filters">
-      <button class="cat-pill active">All</button>
-      <button class="cat-pill">Technology</button>
-      <button class="cat-pill">Design</button>
-      <button class="cat-pill">Lifestyle</button>
-      <button class="cat-pill">Business</button>
-      <button class="cat-pill">Language</button>
-      <button class="cat-pill">Music</button>
+      <button class="cat-pill active" data-cat="All">All</button>
+      <button class="cat-pill" data-cat="Technology">Technology</button>
+      <button class="cat-pill" data-cat="Design">Design</button>
+      <button class="cat-pill" data-cat="Lifestyle">Lifestyle</button>
+      <button class="cat-pill" data-cat="Business">Business</button>
+      <button class="cat-pill" data-cat="Language">Language</button>
+      <button class="cat-pill" data-cat="Music">Music</button>
     </div>
-    <div class="skill-grid">
-      <div class="skill-card" onclick="goPage('profile')">
+    <div class="search-bar-wrap">
+      <div class="search-bar">
+        <input type="text" id="skillSearch" placeholder="Search skills, tutors, or topics…" oninput="filterSkills()" />
+        <button onclick="filterSkills()">🔍 Search</button>
+      </div>
+    </div>
+    <div class="skill-grid" id="skillGrid">
+      <div class="skill-card" data-category="Design" onclick="goPage('profile')">
         <div class="skill-img" style="background:linear-gradient(135deg,#FDE68A,#FCA5A5);">
           <span>🎨</span>
           <span class="overlay-tag">Design</span>
@@ -403,7 +442,7 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
           </div>
         </div>
       </div>
-      <div class="skill-card" onclick="goPage('profile')">
+      <div class="skill-card" data-category="Business" onclick="goPage('profile')">
         <div class="skill-img" style="background:linear-gradient(135deg,#C4B5FD,#93C5FD);">
           <span>📄</span>
           <span class="overlay-tag">Business</span>
@@ -418,7 +457,7 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
           </div>
         </div>
       </div>
-      <div class="skill-card" onclick="goPage('profile')">
+      <div class="skill-card" data-category="Language" onclick="goPage('profile')">
         <div class="skill-img" style="background:linear-gradient(135deg,#A7F3D0,#6EE7B7);">
           <span>🗣️</span>
           <span class="overlay-tag">Language</span>
@@ -433,6 +472,10 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
           </div>
         </div>
       </div>
+    </div>
+    <div class="no-results" id="noResults">
+      <div class="nr-icon">🔍</div>
+      <p>No skills found matching your search. Try a different keyword or category.</p>
     </div>
     <div class="text-center">
       <button class="hero-btn" style="font-size:0.9rem; padding:12px 28px;">Get Started →</button>
@@ -603,7 +646,7 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
         <div class="profile-avatar" style="background:linear-gradient(135deg,var(--teal),var(--teal-dark));">DA</div>
         <div class="profile-info">
           <h2>Darren Ang <span class="verified">✓ Verified Student</span></h2>
-          <p style="color:var(--gray); font-size:0.88rem;">3rd Year · Faculty of Computing · Quest International University</p>
+          <p style="color:var(--gray); font-size:0.88rem;">3rd Year · Faculty of Computing and Engineering · BIT student · Quest International University</p>
           <p class="bio">"I love making Stats less scary. Let's work through problems together! I've been tutoring for 2 semesters and really enjoy seeing lightbulb moments."</p>
           <div class="profile-tags">
             <span class="profile-tag">Statistics</span>
@@ -665,11 +708,11 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
       <div class="session-info">
         <div class="info-block"><div class="lbl">Format</div><div class="val">1-on-1 or Small Group (max 3)</div></div>
         <div class="info-block"><div class="lbl">Duration</div><div class="val">45 min – 1.5 hours</div></div>
-        <div class="info-block"><div class="lbl">Location</div><div class="val">QIU Library Room 3B / Google Meet</div></div>
+        <div class="info-block"><div class="lbl">Location</div><div class="val">Laplace / Google Meet</div></div>
         <div class="info-block"><div class="lbl">Skill Level</div><div class="val"><span class="level-badge intermediate" style="margin:0;">Intermediate</span></div></div>
       </div>
       <div class="action-row">
-        <button class="btn-primary" onclick="alert('✅ Booking confirmed! Check your Messages for details.')">📅 Book a Session</button>
+        <button class="btn-primary" onclick="openBookingModal()">📅 Book a Session</button>
         <button class="btn-outline" onclick="goPage('chat')">💬 Send Inquiry</button>
         <button class="btn-save" onclick="this.textContent=this.textContent.includes('♡')?'♥ Saved!':'♡ Save Tutor'">♡ Save Tutor</button>
       </div>
@@ -680,7 +723,7 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
       <h3 class="section-title" style="font-size:1.2rem;">⭐ Reviews & <span class="accent">Ratings</span></h3>
       <div class="review-item">
         <div class="review-head">
-          <span class="reviewer">Aisha M.</span>
+          <span class="reviewer">Lim Jie Yee</span>
           <span class="date">2 weeks ago</span>
         </div>
         <div class="review-stars">★★★★★</div>
@@ -688,7 +731,7 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
       </div>
       <div class="review-item">
         <div class="review-head">
-          <span class="reviewer">Priya N.</span>
+          <span class="reviewer">Hong Yuee</span>
           <span class="date">1 month ago</span>
         </div>
         <div class="review-stars">★★★★☆</div>
@@ -696,7 +739,7 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
       </div>
       <div class="review-item">
         <div class="review-head">
-          <span class="reviewer">Wei Chen</span>
+          <span class="reviewer">YueZe Li</span>
           <span class="date">1 month ago</span>
         </div>
         <div class="review-stars">★★★★☆</div>
@@ -796,7 +839,7 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
       <textarea class="feedback-textarea" placeholder="Tell other students about your experience...">Darren explained regression step-by-step with real exam questions. Really patient when I got confused. Highly recommend!</textarea>
 
       <div class="action-row">
-        <button class="btn-primary" onclick="alert('✅ Review submitted! Thank you for your feedback.')">Submit Review</button>
+        <button class="btn-primary" onclick="goPage('review-confirmed')">Submit Review</button>
         <button class="btn-outline" onclick="goPage('home')">Skip for Now</button>
       </div>
     </div>
@@ -814,13 +857,13 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
         <h2 class="section-title" style="font-size:1.3rem;">🏘️ Community <span class="accent">Board</span></h2>
         <p style="color:var(--gray); font-size:0.88rem;">Post skill requests, find study groups, or offer help.</p>
       </div>
-      <button class="btn-primary">+ Post a Request</button>
+      <button class="btn-primary" onclick="openPostModal()">+ Post a Request</button>
     </div>
 
     <div class="post-card">
       <div class="post-top">
         <h4>🆘 Need help with Java OOP concepts</h4>
-        <span class="time">2 hours ago · Aisha M.</span>
+        <span class="time">2 hours ago · Lim Jie Yee</span>
       </div>
       <p>Struggling with inheritance and polymorphism for my BIT1023 assignment. Anyone free this week? Willing to trade Python help in return!</p>
       <div class="post-footer">
@@ -833,7 +876,7 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
     <div class="post-card">
       <div class="post-top">
         <h4>🎸 Guitar lessons in exchange for Mandarin practice</h4>
-        <span class="time">5 hours ago · Wei Chen</span>
+        <span class="time">5 hours ago · YueZe Li</span>
       </div>
       <p>Intermediate guitarist looking for a Mandarin conversation partner. Happy to meet on campus or online — flexible schedule!</p>
       <div class="post-footer">
@@ -846,7 +889,7 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
     <div class="post-card">
       <div class="post-top">
         <h4>📊 Group study for BIT2100 Statistics final</h4>
-        <span class="time">1 day ago · Priya Nair</span>
+        <span class="time">1 day ago · Hong Yuee</span>
       </div>
       <p>Forming a study group for the Stats final. Need 2-3 more people. We meet Saturdays 10 AM at the library. Bring your past year papers!</p>
       <div class="post-footer">
@@ -859,7 +902,7 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
     <div class="post-card">
       <div class="post-top">
         <h4>🐍 Looking for Python tutor — will teach Photoshop</h4>
-        <span class="time">2 days ago · Jason Lee</span>
+        <span class="time">2 days ago · Enya Wong</span>
       </div>
       <p>Need someone to walk me through Python basics (loops, functions, file handling). I'm pretty good at Photoshop and can teach in return.</p>
       <div class="post-footer">
@@ -939,6 +982,119 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
 </div><!-- end page-bookmarks -->
 
 
+<!-- ============================== -->
+<!-- PAGE: REVIEW CONFIRMED          -->
+<!-- ============================== -->
+<div class="page" id="page-review-confirmed">
+  <div class="container confirmed-page">
+    <div class="confirmed-card">
+      <div class="confirmed-icon">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      </div>
+      <h2>Review Submitted!</h2>
+      <p>Thank you for your feedback. Your review helps other students find great skill partners.</p>
+      <button class="btn-primary" onclick="goPage('home')" style="font-size:0.95rem;">← Back to Home</button>
+    </div>
+  </div>
+</div><!-- end page-review-confirmed -->
+
+
+<!-- ============================== -->
+<!-- PAGE: BOOKING CONFIRMED          -->
+<!-- ============================== -->
+<div class="page" id="page-booking-confirmed">
+  <div class="container confirmed-page">
+    <div class="confirmed-card">
+      <div class="confirmed-icon">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      </div>
+      <h2>Session Confirmed!</h2>
+      <p>Your booking has been confirmed. You'll receive details in your Messages. See you at the session!</p>
+      <button class="btn-primary" onclick="goPage('home')" style="font-size:0.95rem;">← Back to Home</button>
+    </div>
+  </div>
+</div><!-- end page-booking-confirmed -->
+
+
+<!-- ============================== -->
+<!-- PAGE: POST CONFIRMED              -->
+<!-- ============================== -->
+<div class="page" id="page-post-confirmed">
+  <div class="container confirmed-page">
+    <div class="confirmed-card">
+      <div class="confirmed-icon">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      </div>
+      <h2>Request Posted!</h2>
+      <p>Your request has been posted to the Community Board. Other students will be able to see and respond to it.</p>
+      <button class="btn-primary" onclick="goPage('home')" style="font-size:0.95rem;">← Back to Home</button>
+    </div>
+  </div>
+</div><!-- end page-post-confirmed -->
+
+
+<!-- ============================== -->
+<!-- MODAL: BOOK A SESSION             -->
+<!-- ============================== -->
+<div class="modal-overlay" id="bookingModal">
+  <div class="modal-card">
+    <button class="close-modal" onclick="closeModal('bookingModal')">&times;</button>
+    <h3>📅 Book a Session</h3>
+    <p class="modal-sub">Fill in your details to book a session with Darren Ang.</p>
+    <div class="form-group">
+      <label for="bookName">Full Name</label>
+      <input type="text" id="bookName" placeholder="e.g. Lim Jie Yee" />
+    </div>
+    <div class="form-group">
+      <label for="bookLocation">Preferred Location</label>
+      <select id="bookLocation">
+        <option value="">Select location…</option>
+        <option>Laplace (On Campus)</option>
+        <option>Google Meet (Online)</option>
+        <option>Zoom (Online)</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="bookAvailability">Availability</label>
+      <input type="text" id="bookAvailability" placeholder="e.g. Monday 10 AM, Wednesday 3 PM" />
+    </div>
+    <div class="form-group">
+      <label for="bookPhone">Phone Number</label>
+      <input type="tel" id="bookPhone" placeholder="e.g. +60 12-345 6789" />
+    </div>
+    <div class="action-row">
+      <button class="btn-primary" onclick="confirmBooking()">Confirm Session</button>
+      <button class="btn-outline" onclick="closeModal('bookingModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============================== -->
+<!-- MODAL: POST A REQUEST             -->
+<!-- ============================== -->
+<div class="modal-overlay" id="postModal">
+  <div class="modal-card">
+    <button class="close-modal" onclick="closeModal('postModal')">&times;</button>
+    <h3>📝 Post a Request</h3>
+    <p class="modal-sub">Share what skill you need help with or what you can offer.</p>
+    <div class="form-group">
+      <label for="postTitle">Title</label>
+      <input type="text" id="postTitle" placeholder="e.g. Need help with Java OOP concepts" />
+    </div>
+    <div class="form-group">
+      <label for="postContent">Content</label>
+      <textarea id="postContent" placeholder="Describe what you're looking for or offering…"></textarea>
+    </div>
+    <div class="action-row">
+      <button class="btn-primary" onclick="confirmPost()">Post Request</button>
+      <button class="btn-outline" onclick="closeModal('postModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+
 <script>
 // Page navigation
 function goPage(id) {
@@ -958,13 +1114,69 @@ function toggleFaq(el) {
   if (!wasOpen) item.classList.add('open');
 }
 
-// Category filter pills
+// Category filter pills — now actually filter skill cards
 document.querySelectorAll('.cat-pill').forEach(pill => {
   pill.addEventListener('click', () => {
     document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
     pill.classList.add('active');
+    filterSkills();
   });
 });
+
+// Search + Category filter logic
+function filterSkills() {
+  const query = (document.getElementById('skillSearch').value || '').toLowerCase().trim();
+  const activeCat = document.querySelector('.cat-pill.active');
+  const cat = activeCat ? activeCat.getAttribute('data-cat') : 'All';
+  const cards = document.querySelectorAll('#skillGrid .skill-card');
+  let visible = 0;
+  cards.forEach(card => {
+    const cardCat = card.getAttribute('data-category');
+    const text = card.textContent.toLowerCase();
+    const matchesCat = (cat === 'All' || cardCat === cat);
+    const matchesSearch = (!query || text.includes(query));
+    if (matchesCat && matchesSearch) {
+      card.style.display = '';
+      visible++;
+    } else {
+      card.style.display = 'none';
+    }
+  });
+  const noRes = document.getElementById('noResults');
+  if (noRes) noRes.style.display = visible === 0 ? 'block' : 'none';
+}
+
+// Modal open/close
+function openBookingModal() { document.getElementById('bookingModal').classList.add('show'); }
+function openPostModal() { document.getElementById('postModal').classList.add('show'); }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+// Close modal on overlay click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) overlay.classList.remove('show');
+  });
+});
+
+// Confirm booking
+function confirmBooking() {
+  const name = document.getElementById('bookName').value.trim();
+  const phone = document.getElementById('bookPhone').value.trim();
+  if (!name) { document.getElementById('bookName').focus(); return; }
+  if (!phone) { document.getElementById('bookPhone').focus(); return; }
+  closeModal('bookingModal');
+  goPage('booking-confirmed');
+}
+
+// Confirm post
+function confirmPost() {
+  const title = document.getElementById('postTitle').value.trim();
+  const content = document.getElementById('postContent').value.trim();
+  if (!title) { document.getElementById('postTitle').focus(); return; }
+  if (!content) { document.getElementById('postContent').focus(); return; }
+  closeModal('postModal');
+  goPage('post-confirmed');
+}
 
 // Slot selection
 function selectSlot(el) {
