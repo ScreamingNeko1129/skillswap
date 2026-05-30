@@ -28,24 +28,25 @@ Built as a front-end prototype for an HCI (Human-Computer Interaction) course pr
 
 | Feature | Description |
 |---|---|
-| 🏠 **Landing Page** | Hero section, value cards, skill explorer, testimonials, FAQ, and community CTA |
-| 🔍 **Skill Search & Filter** | Real-time search bar with category pill filters (Technology, Design, Lifestyle, Business, Language, Music) |
-| 👤 **Tutor Profile** | Detailed profile with bio, skill tags, trust badges, reviews, and interactive weekly schedule |
-| 📅 **Session Booking** | Select available time slots and confirm bookings with a modal confirmation flow |
-| 💬 **Messaging** | Chat interface with conversation sidebar and real-time message simulation |
+| 🏠 **Landing Page** | Hero section, value cards, skill explorer, testimonials, FAQ, and community CTA with inline email validation |
+| 🔍 **Skill Search & Filter** | Real-time search bar with category pill filters (Technology, Design, Lifestyle, Business, Language, Music) and no-results state |
+| 👤 **Multi-Profile System** | 3 switchable tutor profiles (Hong Yuee, Enya Wong, Lim Jie Yee) with bios, skill tags, trust & verification badges, reviews, and interactive weekly schedule |
+| 📅 **Session Booking** | Select available time slots, confirm bookings via modal, and auto-prompt feedback banner after booking |
+| 💬 **Messaging** | Multi-conversation chat with 3 contacts, conversation switching, real-time message simulation, and mobile sidebar toggle |
 | 📋 **Community Board** | Post and browse skill exchange requests from fellow students |
-| 🔖 **Bookmarks** | Save and manage favorite skill listings |
+| 🔖 **Bookmarks** | Save/unsave tutors with synced state across pages and empty-state fallback |
 | 📝 **Feedback System** | Star ratings, tag-based feedback, and written reviews after sessions |
-| 📒 **My Bookings** | View upcoming and completed bookings with cancel/reschedule options |
-| 🎓 **Offer a Skill** | Modal form to list a new skill you want to teach |
-| 📱 **Responsive Design** | Fully responsive with mobile hamburger menu and adaptive layouts |
+| 📒 **My Bookings** | View upcoming and completed bookings with cancel/reschedule that re-opens schedule slots |
+| 🎓 **Offer a Skill** | Modal form to publish a new skill listing (auto-added to the skill grid) |
+| 📱 **Responsive Design** | Fully responsive with mobile hamburger menu, adaptive layouts, and mobile chat sidebar |
+| ♿ **Accessibility** | ARIA roles & labels, focus-visible outlines, keyboard navigation, and semantic HTML |
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **HTML5** — Semantic markup with accessibility attributes (ARIA roles, labels)
-- **CSS3** — Custom properties (CSS variables), animations, gradients, glassmorphism navbar
+- **HTML5** — Semantic markup with ARIA roles, labels, `aria-expanded`, and `aria-live` regions
+- **CSS3** — Custom properties (CSS variables), keyframe animations, gradients, glassmorphism navbar, `focus-visible` outlines
 - **Vanilla JavaScript** — SPA-style page routing, interactive components, DOM manipulation
 - **Google Fonts** — Open Sans + Playfair Display
 
