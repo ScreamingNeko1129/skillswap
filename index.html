@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SkillSwap — Student Skill Exchange Platform</title>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
 <style>
 :root {
   --yellow: #F5C518;
@@ -29,7 +29,7 @@
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 html { scroll-behavior:smooth; }
-body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--white); line-height:1.6; overflow-x:hidden; }
+body { font-family:'Open Sans',sans-serif; color:var(--dark); background:var(--white); line-height:1.6; overflow-x:hidden; }
 
 /* UTILITIES */
 .container { max-width:1160px; margin:0 auto; padding:0 24px; }
@@ -42,6 +42,8 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
 /* ANIMATIONS */
 @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
 @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+@keyframes slideDown { from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:translateY(0)} }
+@keyframes scaleIn { from{opacity:0;transform:scale(0.92)} to{opacity:1;transform:scale(1)} }
 .anim-up { animation:fadeUp 0.5s ease both; }
 
 /* ===== NAVBAR ===== */
@@ -55,6 +57,8 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
 .nav-link.active { color:var(--dark); background:var(--yellow-light); }
 .nav-cta { padding:8px 20px; border-radius:30px; font-size:0.88rem; font-weight:600; color:var(--dark); background:var(--yellow); border:none; cursor:pointer; font-family:inherit; transition:all 0.2s; }
 .nav-cta:hover { background:var(--yellow-hover); transform:translateY(-1px); }
+#menu-toggle { display:none; width:40px; height:40px; border:none; background:var(--yellow); border-radius:10px; font-size:1.3rem; cursor:pointer; font-family:inherit; transition:all 0.2s; }
+#menu-toggle:hover { background:var(--yellow-hover); }
 
 /* PAGE SYSTEM */
 .page { display:none; }
@@ -96,6 +100,10 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
 /* ===== EXPLORE SKILLS ===== */
 .explore { padding:70px 0; }
 .explore .text-center { margin-bottom:32px; }
+.search-bar { display:flex; align-items:center; max-width:480px; margin:0 auto 20px; background:var(--white); border:1.5px solid var(--gray-border); border-radius:40px; padding:4px 6px 4px 20px; transition:border-color 0.2s; }
+.search-bar:focus-within { border-color:var(--teal); }
+.search-bar input { flex:1; border:none; outline:none; font-family:inherit; font-size:0.92rem; background:transparent; padding:10px 8px; }
+.search-bar .search-icon { font-size:1.1rem; opacity:0.5; }
 .cat-filters { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-bottom:32px; }
 .cat-pill { padding:9px 22px; border-radius:30px; font-size:0.88rem; font-weight:500; border:1.5px solid var(--gray-border); background:var(--white); color:var(--gray); cursor:pointer; transition:all 0.2s; font-family:inherit; }
 .cat-pill:hover { border-color:var(--yellow); color:var(--dark); }
@@ -103,6 +111,7 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
 .skill-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; margin-bottom:36px; }
 .skill-card { border-radius:var(--radius); border:1px solid var(--gray-border); overflow:hidden; transition:all 0.3s; background:var(--white); }
 .skill-card:hover { transform:translateY(-4px); box-shadow:var(--shadow-lg); }
+.skill-card.hidden { display:none; }
 .skill-img { height:170px; background:var(--gray-light); display:flex; align-items:center; justify-content:center; font-size:3rem; position:relative; overflow:hidden; }
 .skill-img .overlay-tag { position:absolute; top:12px; left:12px; padding:4px 12px; border-radius:20px; font-size:0.72rem; font-weight:600; background:var(--white); color:var(--teal); }
 .skill-body { padding:18px 20px; }
@@ -125,7 +134,7 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
 .test-nav button { width:42px; height:42px; border-radius:50%; border:none; background:var(--yellow); color:var(--dark); font-size:1.1rem; cursor:pointer; font-weight:700; transition:all 0.2s; }
 .test-nav button:hover { background:var(--dark); color:var(--yellow); }
 .test-grid { display:grid; grid-template-columns:1fr 1fr; gap:22px; }
-.test-card { background:var(--white); border-radius:var(--radius); padding:28px; border:1px solid var(--gray-border); position:relative; }
+.test-card { background:var(--white); border-radius:var(--radius); padding:28px; border:1px solid var(--gray-border); position:relative; transition:opacity 0.3s ease; }
 .test-card .quote-mark { font-family:'Playfair Display',serif; font-size:3rem; color:var(--teal); line-height:1; margin-bottom:8px; }
 .test-card p { color:var(--gray); font-size:0.92rem; margin-bottom:18px; font-style:italic; }
 .test-card .author { display:flex; align-items:center; gap:12px; }
@@ -158,6 +167,9 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
 .cta-form button { padding:12px 28px; border:none; background:var(--yellow); color:var(--dark); font-weight:700; border-radius:30px; cursor:pointer; font-family:inherit; font-size:0.9rem; white-space:nowrap; }
 .cta-floats { position:absolute; top:16px; left:32px; width:40px; height:40px; background:var(--yellow); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1rem; animation:float 3s ease-in-out infinite; }
 .cta-floats.r { left:auto; right:32px; top:auto; bottom:24px; background:rgba(255,255,255,0.15); animation-delay:1s; }
+.cta-form .cta-error { display:none; color:#FCA5A5; font-size:0.78rem; position:absolute; bottom:-22px; left:20px; font-weight:500; }
+.cta-success { display:none; color:var(--white); font-size:1.1rem; font-weight:600; position:relative; animation:scaleIn 0.4s ease both; }
+.cta-success .success-icon { font-size:2rem; display:block; margin-bottom:8px; }
 
 /* ===== FOOTER ===== */
 .footer { margin-top:70px; background:var(--yellow); color:var(--dark); padding:48px 0 0; }
@@ -166,7 +178,8 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
 .footer-brand .logo .logo-icon { background:var(--dark); color:var(--yellow); }
 .footer-brand p { font-size:0.85rem; color:var(--dark2); max-width:220px; margin-bottom:16px; }
 .app-badges { display:flex; gap:8px; }
-.app-badge { padding:8px 14px; background:var(--dark); color:var(--white); border-radius:8px; font-size:0.7rem; font-weight:600; display:flex; align-items:center; gap:6px; }
+.app-badge { padding:8px 14px; background:var(--dark); color:var(--white); border-radius:8px; font-size:0.7rem; font-weight:600; display:inline-flex; align-items:center; gap:6px; text-decoration:none; transition:opacity 0.2s; }
+.app-badge:hover { opacity:0.85; }
 .app-badge .badge-icon { font-size:1rem; }
 .footer h5 { font-weight:700; font-size:0.9rem; margin-bottom:14px; color:var(--teal-dark); }
 .footer ul { list-style:none; }
@@ -203,6 +216,8 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
 .slot.open:hover { background:var(--teal); color:var(--white); }
 .slot.taken { background:var(--gray-light); color:var(--gray); border:1px solid var(--gray-border); text-decoration:line-through; cursor:default; }
 .slot.selected { background:var(--yellow); color:var(--dark); border-color:var(--yellow); font-weight:700; }
+.selected-slot-info { margin-top:12px; padding:10px 16px; background:var(--yellow-light); border-radius:var(--radius-sm); font-size:0.88rem; font-weight:600; color:var(--dark); display:none; border-left:4px solid var(--yellow); }
+.selected-slot-info.visible { display:block; animation:fadeUp 0.3s ease; }
 
 /* Session details */
 .session-info { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:20px 0; }
@@ -218,6 +233,7 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
 .btn-outline:hover { background:var(--teal); color:var(--white); }
 .btn-save { padding:12px 24px; background:transparent; color:var(--red); border:2px solid var(--red); font-weight:600; border-radius:30px; cursor:pointer; font-family:inherit; font-size:0.92rem; transition:all 0.2s; }
 .btn-save:hover { background:var(--red); color:var(--white); }
+.btn-save.saved { background:var(--red); color:var(--white); }
 
 /* REVIEWS on profile */
 .reviews-section { padding:36px 0; border-top:1px solid var(--gray-border); }
@@ -244,6 +260,8 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
 .chat-header { padding:14px 20px; border-bottom:1px solid var(--gray-border); display:flex; align-items:center; gap:12px; }
 .chat-header strong { font-size:0.95rem; }
 .chat-header .status-dot { width:8px; height:8px; border-radius:50%; background:var(--green); }
+#chatContactsToggle { display:none; margin-left:auto; width:36px; height:36px; border:none; background:var(--teal-light); border-radius:50%; font-size:1rem; cursor:pointer; transition:background 0.2s; }
+#chatContactsToggle:hover { background:var(--teal); color:var(--white); }
 .chat-messages { flex:1; padding:20px; overflow-y:auto; display:flex; flex-direction:column; gap:10px; }
 .msg { max-width:70%; padding:12px 16px; border-radius:16px; font-size:0.9rem; line-height:1.5; }
 .msg.them { background:var(--gray-light); color:var(--dark); align-self:flex-start; border-bottom-left-radius:4px; }
@@ -284,6 +302,109 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
 
 /* BOOKMARKS PAGE */
 .bookmarks-page { padding:40px 0 60px; }
+.bookmarks-empty { text-align:center; padding:80px 20px; }
+.bookmarks-empty .empty-icon { font-size:3.5rem; margin-bottom:16px; display:block; }
+.bookmarks-empty p { color:var(--gray); font-size:1rem; margin-bottom:20px; }
+.bookmarks-empty a { color:var(--teal); font-weight:600; text-decoration:none; border-bottom:2px solid var(--teal); padding-bottom:2px; transition:color 0.2s; cursor:pointer; }
+.bookmarks-empty a:hover { color:var(--teal-dark); border-color:var(--teal-dark); }
+
+/* ===== MODALS (shared) ===== */
+.modal-overlay { display:none; position:fixed; inset:0; z-index:200; background:rgba(0,0,0,0.45); backdrop-filter:blur(4px); align-items:center; justify-content:center; }
+.modal-overlay.open { display:flex; }
+.modal-box { background:var(--white); border-radius:20px; width:90%; max-width:480px; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,0.2); animation:scaleIn 0.25s ease; }
+.modal-header { padding:24px 28px 0; display:flex; justify-content:space-between; align-items:flex-start; }
+.modal-header h3 { font-size:1.2rem; font-weight:700; }
+.modal-close { width:36px; height:36px; border-radius:50%; border:none; background:var(--gray-light); font-size:1.1rem; cursor:pointer; transition:all 0.2s; flex-shrink:0; }
+.modal-close:hover { background:var(--red); color:var(--white); }
+.modal-body { padding:20px 28px 28px; }
+.modal-body label { display:block; font-weight:600; font-size:0.88rem; margin-bottom:6px; color:var(--dark); }
+.modal-body input, .modal-body textarea, .modal-body select { width:100%; padding:11px 16px; border:1.5px solid var(--gray-border); border-radius:var(--radius-sm); font-family:inherit; font-size:0.92rem; outline:none; margin-bottom:16px; transition:border-color 0.2s; }
+.modal-body input:focus, .modal-body textarea:focus, .modal-body select:focus { border-color:var(--teal); }
+.modal-body textarea { min-height:80px; resize:vertical; }
+.modal-actions { display:flex; gap:10px; margin-top:4px; }
+
+/* Booking modal specific */
+.booking-detail { display:flex; gap:14px; margin-bottom:16px; }
+.booking-detail .bd-item { flex:1; padding:14px; background:var(--gray-light); border-radius:var(--radius-sm); text-align:center; }
+.booking-detail .bd-item .bd-label { font-size:0.72rem; color:var(--gray); text-transform:uppercase; letter-spacing:0.5px; }
+.booking-detail .bd-item .bd-value { font-size:1rem; font-weight:700; margin-top:4px; }
+.booking-tutor { display:flex; align-items:center; gap:12px; margin-bottom:20px; padding:14px; background:var(--teal-light); border-radius:var(--radius-sm); }
+.booking-tutor .bt-avatar { width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--white); font-weight:700; }
+.booking-tutor .bt-info strong { font-size:0.95rem; display:block; }
+.booking-tutor .bt-info span { font-size:0.82rem; color:var(--gray); }
+
+/* Signup modal specific */
+.signup-header-accent { background:linear-gradient(135deg,var(--teal),var(--teal-dark)); padding:28px; border-radius:20px 20px 0 0; color:var(--white); text-align:center; }
+.signup-header-accent h3 { font-size:1.3rem; font-weight:800; color:var(--white); margin-bottom:4px; }
+.signup-header-accent p { font-size:0.88rem; opacity:0.85; }
+
+/* SCHEDULE LEGEND */
+.schedule-legend { display:flex; gap:20px; align-items:center; margin-top:14px; padding:10px 16px; background:var(--gray-light); border-radius:var(--radius-sm); flex-wrap:wrap; }
+.legend-item { display:flex; align-items:center; gap:7px; font-size:0.82rem; font-weight:500; color:var(--gray); }
+.legend-dot { width:14px; height:14px; border-radius:4px; border:1.5px solid transparent; flex-shrink:0; }
+.legend-dot.available { background:var(--teal-light); border-color:rgba(26,143,127,0.25); }
+.legend-dot.taken { background:var(--gray-light); border-color:var(--gray-border); position:relative; }
+.legend-dot.taken::after { content:''; position:absolute; top:50%; left:0; right:0; height:1.5px; background:var(--gray); transform:rotate(-45deg); }
+.legend-dot.sel { background:var(--yellow); border-color:var(--yellow); }
+
+/* TRUST SECTION */
+.trust-section { margin:24px 0 8px; padding:20px 24px; background:var(--white); border:1.5px solid var(--gray-border); border-radius:var(--radius); }
+.trust-section h4 { font-size:1rem; font-weight:700; margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+.trust-badges { display:flex; gap:16px; flex-wrap:wrap; }
+.trust-badge { display:flex; align-items:center; gap:10px; padding:12px 18px; background:var(--gray-light); border-radius:var(--radius-sm); flex:1; min-width:200px; }
+.trust-badge .tb-icon { width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
+.trust-badge .tb-icon.verify { background:#DCFCE7; }
+.trust-badge .tb-icon.reviews { background:var(--yellow-light); }
+.trust-badge .tb-icon.response { background:var(--teal-light); }
+.trust-badge .tb-text { font-size:0.82rem; line-height:1.4; }
+.trust-badge .tb-text strong { display:block; font-size:0.88rem; color:var(--dark); }
+.trust-badge .tb-text span { color:var(--gray); }
+
+/* MY BOOKINGS PAGE */
+.bookings-page { padding:40px 0 60px; }
+.bookings-list { display:flex; flex-direction:column; gap:14px; }
+.booking-card { background:var(--white); border:1.5px solid var(--gray-border); border-radius:var(--radius); padding:24px; display:flex; align-items:center; gap:20px; transition:all 0.3s; }
+.booking-card:hover { border-color:var(--teal); box-shadow:var(--shadow); }
+.booking-card .bc-avatar { width:52px; height:52px; border-radius:16px; display:flex; align-items:center; justify-content:center; color:var(--white); font-weight:700; font-size:0.95rem; flex-shrink:0; }
+.booking-card .bc-info { flex:1; min-width:0; }
+.booking-card .bc-info h4 { font-size:1rem; font-weight:700; margin-bottom:2px; }
+.booking-card .bc-info .bc-detail { font-size:0.85rem; color:var(--gray); }
+.booking-card .bc-status { padding:5px 14px; border-radius:20px; font-size:0.78rem; font-weight:600; flex-shrink:0; }
+.booking-card .bc-status.upcoming { background:#DBEAFE; color:#1E40AF; }
+.booking-card .bc-status.completed { background:#DCFCE7; color:#166534; }
+.booking-card .bc-actions { display:flex; gap:8px; flex-shrink:0; }
+.booking-card .bc-actions button { padding:8px 16px; border-radius:20px; font-size:0.8rem; font-weight:600; cursor:pointer; font-family:inherit; transition:all 0.2s; }
+.bc-actions .bc-cancel { background:transparent; border:1.5px solid var(--red); color:var(--red); }
+.bc-actions .bc-cancel:hover { background:var(--red); color:var(--white); }
+.bc-actions .bc-reschedule { background:transparent; border:1.5px solid var(--teal); color:var(--teal); }
+.bc-actions .bc-reschedule:hover { background:var(--teal); color:var(--white); }
+.bookings-empty-state { text-align:center; padding:80px 20px; }
+.bookings-empty-state .empty-icon { font-size:3.5rem; margin-bottom:16px; display:block; }
+.bookings-empty-state p { color:var(--gray); font-size:1rem; margin-bottom:20px; }
+.bookings-empty-state a { color:var(--teal); font-weight:600; text-decoration:none; border-bottom:2px solid var(--teal); padding-bottom:2px; cursor:pointer; }
+
+/* FEEDBACK BANNER */
+@keyframes slideBannerDown { from { transform:translateY(-100%); opacity:0; } to { transform:translateY(0); opacity:1; } }
+@keyframes slideBannerUp { from { transform:translateY(0); opacity:1; } to { transform:translateY(-100%); opacity:0; } }
+.feedback-banner { position:fixed; top:64px; left:0; right:0; z-index:90; background:linear-gradient(135deg,var(--teal),var(--teal-dark)); color:var(--white); padding:14px 24px; display:none; align-items:center; justify-content:center; gap:16px; font-size:0.92rem; font-weight:500; box-shadow:0 4px 20px rgba(0,0,0,0.15); animation:slideBannerDown 0.35s ease both; }
+.feedback-banner.visible { display:flex; }
+.feedback-banner.hiding { animation:slideBannerUp 0.3s ease forwards; }
+.feedback-banner .fb-link { color:var(--yellow); font-weight:700; cursor:pointer; text-decoration:underline; text-underline-offset:3px; }
+.feedback-banner .fb-link:hover { color:var(--yellow-light); }
+.feedback-banner .fb-close { width:28px; height:28px; border-radius:50%; border:none; background:rgba(255,255,255,0.2); color:var(--white); font-size:0.9rem; cursor:pointer; transition:background 0.2s; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.feedback-banner .fb-close:hover { background:rgba(255,255,255,0.35); }
+
+/* NO-RESULTS STATE */
+.no-results { text-align:center; padding:60px 20px; display:none; }
+.no-results .nr-icon { font-size:3rem; display:block; margin-bottom:12px; }
+.no-results h4 { font-size:1.1rem; font-weight:700; margin-bottom:6px; color:var(--dark); }
+.no-results p { color:var(--gray); font-size:0.92rem; max-width:380px; margin:0 auto; }
+
+/* ACCESSIBILITY — FOCUS VISIBLE */
+*:focus-visible { outline:2.5px solid var(--teal); outline-offset:2px; border-radius:4px; }
+button:focus-visible, .nav-link:focus-visible, .cat-pill:focus-visible, .star-btn:focus-visible, .tag-btn:focus-visible, .post-btn:focus-visible { outline:2.5px solid var(--teal); outline-offset:2px; }
+.hero-btn:focus-visible, .btn-primary:focus-visible, .btn-outline:focus-visible, .btn-save:focus-visible, .nav-cta:focus-visible { outline:2.5px solid var(--dark); outline-offset:3px; }
+input:focus-visible, textarea:focus-visible, select:focus-visible { outline:none; border-color:var(--teal); box-shadow:0 0 0 3px rgba(26,143,127,0.15); }
 
 /* RESPONSIVE */
 @media(max-width:900px) {
@@ -294,34 +415,57 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
   .test-grid { grid-template-columns:1fr; }
   .faq .container { grid-template-columns:1fr; }
   .footer-grid { grid-template-columns:1fr 1fr; gap:24px; }
-  .chat-container { grid-template-columns:1fr; }
-  .chat-sidebar { display:none; }
-  .nav-links { display:none; }
   .profile-stats { grid-template-columns:repeat(2,1fr); }
   .schedule-grid { grid-template-columns:repeat(3,1fr); }
   .session-info { grid-template-columns:1fr; }
+  .trust-badges { flex-direction:column; }
+  .booking-card { flex-direction:column; align-items:flex-start; gap:12px; }
+  .booking-card .bc-actions { width:100%; }
+  .feedback-banner { flex-wrap:wrap; font-size:0.85rem; gap:10px; }
+
+  /* Hamburger menu */
+  #menu-toggle { display:flex; align-items:center; justify-content:center; }
+  .nav-links { display:none; position:fixed; top:64px; left:0; right:0; background:var(--white); flex-direction:column; padding:16px 24px 24px; border-bottom:2px solid var(--yellow); box-shadow:var(--shadow-lg); z-index:99; gap:4px; }
+  .nav-links.open { display:flex; animation:slideDown 0.25s ease; }
+  .nav-links .nav-link { width:100%; text-align:left; padding:12px 16px; }
+  .nav-links .nav-cta { width:100%; text-align:center; margin-top:8px; }
+
+  /* Chat mobile */
+  .chat-container { grid-template-columns:1fr; }
+  .chat-sidebar { display:none; position:fixed; top:64px; left:0; right:0; bottom:0; z-index:150; border-radius:0; animation:slideDown 0.25s ease; overflow-y:auto; }
+  .chat-sidebar.mobile-open { display:block; }
+  #chatContactsToggle { display:flex; align-items:center; justify-content:center; }
 }
 </style>
 </head>
 <body>
 
 <!-- ===== NAVBAR ===== -->
-<nav class="navbar">
+<nav class="navbar" role="navigation" aria-label="Main navigation">
   <div class="container">
-    <a class="nav-logo" onclick="goPage('home')">
-      <span class="logo-icon">⚡</span> SkillSwap
+    <a class="nav-logo" onclick="goPage('home')" tabindex="0" aria-label="SkillSwap home">
+      <span class="logo-icon" role="img" aria-label="Lightning bolt">⚡</span> SkillSwap
     </a>
-    <div class="nav-links">
-      <button class="nav-link active" data-nav="home" onclick="goPage('home')">Home</button>
-      <button class="nav-link" data-nav="profile" onclick="goPage('profile')">Profile</button>
-      <button class="nav-link" data-nav="chat" onclick="goPage('chat')">Messages</button>
-      <button class="nav-link" data-nav="board" onclick="goPage('board')">Community</button>
-      <button class="nav-link" data-nav="bookmarks" onclick="goPage('bookmarks')">Saved</button>
-      <button class="nav-link" data-nav="feedback" onclick="goPage('feedback')">Feedback</button>
-      <button class="nav-cta">Sign Up Free</button>
+    <button id="menu-toggle" onclick="toggleMobileMenu()" aria-label="Toggle navigation menu" aria-expanded="false">☰</button>
+    <div class="nav-links" role="menubar">
+      <button class="nav-link active" data-nav="home" onclick="goPage('home')" role="menuitem">Home</button>
+      <button class="nav-link" data-nav="profile" onclick="goPage('profile')" role="menuitem">Profile</button>
+      <button class="nav-link" data-nav="chat" onclick="goPage('chat')" role="menuitem">Messages</button>
+      <button class="nav-link" data-nav="board" onclick="goPage('board')" role="menuitem">Community</button>
+      <button class="nav-link" data-nav="bookmarks" onclick="goPage('bookmarks')" role="menuitem">Saved</button>
+      <button class="nav-link" data-nav="mybookings" onclick="goPage('mybookings')" role="menuitem">My Bookings</button>
+      <button class="nav-link" data-nav="feedback" onclick="goPage('feedback')" role="menuitem">Feedback</button>
+      <button class="nav-cta" onclick="openSignupModal()" role="menuitem">Sign Up Free</button>
     </div>
   </div>
 </nav>
+
+<!-- FEEDBACK BANNER (auto-prompt after booking) -->
+<div class="feedback-banner" id="feedbackBanner" role="status" aria-live="polite">
+  <span id="feedbackBannerText">✅ Session booked!</span>
+  <span class="fb-link" id="feedbackBannerLink" onclick="goPage('feedback'); hideFeedbackBanner();">Leave Feedback →</span>
+  <button class="fb-close" onclick="hideFeedbackBanner()" aria-label="Dismiss feedback prompt">✕</button>
+</div>
 
 <!-- ============================= -->
 <!-- PAGE: HOME (Landing Page)     -->
@@ -378,17 +522,21 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
       <h2 class="section-title">Explore Our <span class="accent">Skills</span></h2>
       <p class="section-sub center">Explore a diverse range of skills contributed by passionate learners and experts. Our community-driven platform connects you with the right people to learn from or teach.</p>
     </div>
-    <div class="cat-filters">
-      <button class="cat-pill active">All</button>
-      <button class="cat-pill">Technology</button>
-      <button class="cat-pill">Design</button>
-      <button class="cat-pill">Lifestyle</button>
-      <button class="cat-pill">Business</button>
-      <button class="cat-pill">Language</button>
-      <button class="cat-pill">Music</button>
+    <div class="search-bar" role="search">
+      <span class="search-icon" role="img" aria-hidden="true">🔍</span>
+      <input type="text" id="skill-search" placeholder="Search skills or tutors..." oninput="filterSkills()" aria-label="Search skills or tutors">
     </div>
-    <div class="skill-grid">
-      <div class="skill-card" onclick="goPage('profile')">
+    <div class="cat-filters">
+      <button class="cat-pill active" data-cat="All">All</button>
+      <button class="cat-pill" data-cat="Technology">Technology</button>
+      <button class="cat-pill" data-cat="Design">Design</button>
+      <button class="cat-pill" data-cat="Lifestyle">Lifestyle</button>
+      <button class="cat-pill" data-cat="Business">Business</button>
+      <button class="cat-pill" data-cat="Language">Language</button>
+      <button class="cat-pill" data-cat="Music">Music</button>
+    </div>
+    <div class="skill-grid" id="skillGrid">
+      <div class="skill-card" data-category="Design" onclick="viewProfile('sarah')">
         <div class="skill-img" style="background:linear-gradient(135deg,#FDE68A,#FCA5A5);">
           <span>🎨</span>
           <span class="overlay-tag">Design</span>
@@ -398,27 +546,27 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
           <h4>Canva for Beginners</h4>
           <span class="level-badge beginner">Beginner</span>
           <div class="tutor-row">
-            <div class="mini-avatar" style="background:var(--teal);">SL</div>
-            <span>Sarah Lim · ★ 4.8</span>
+            <div class="mini-avatar" style="background:var(--teal);">EW</div>
+            <span>Enya Wong · ★ 4.8</span>
           </div>
         </div>
       </div>
-      <div class="skill-card" onclick="goPage('profile')">
+      <div class="skill-card" data-category="Business" onclick="viewProfile('darren')">
         <div class="skill-img" style="background:linear-gradient(135deg,#C4B5FD,#93C5FD);">
           <span>📄</span>
           <span class="overlay-tag">Business</span>
         </div>
         <div class="skill-body">
           <div class="skill-meta"><span>📅 15 May, 2026</span><span>⏱ 1 hr 40 min</span></div>
-          <h4>Resume & LinkedIn Writing</h4>
+          <h4>Resume &amp; LinkedIn Writing</h4>
           <span class="level-badge intermediate">Intermediate</span>
           <div class="tutor-row">
-            <div class="mini-avatar" style="background:var(--yellow);">DA</div>
-            <span>Darren Ang · ★ 4.2</span>
+            <div class="mini-avatar" style="background:var(--yellow);">HY</div>
+            <span>Hong Yuee · ★ 4.2</span>
           </div>
         </div>
       </div>
-      <div class="skill-card" onclick="goPage('profile')">
+      <div class="skill-card" data-category="Language" onclick="viewProfile('maria')">
         <div class="skill-img" style="background:linear-gradient(135deg,#A7F3D0,#6EE7B7);">
           <span>🗣️</span>
           <span class="overlay-tag">Language</span>
@@ -428,14 +576,20 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
           <h4>Conversational Spanish</h4>
           <span class="level-badge advanced">Advanced</span>
           <div class="tutor-row">
-            <div class="mini-avatar" style="background:#EF4444;">MR</div>
-            <span>Maria Reyes · ★ 4.9</span>
+            <div class="mini-avatar" style="background:#EF4444;">JY</div>
+            <span>Lim Jie Yee · ★ 4.9</span>
           </div>
         </div>
       </div>
     </div>
-    <div class="text-center">
-      <button class="hero-btn" style="font-size:0.9rem; padding:12px 28px;">Get Started →</button>
+    <div class="no-results" id="noResults">
+      <span class="nr-icon">🔍</span>
+      <h4 id="noResultsTitle">No results found</h4>
+      <p id="noResultsText">Try a different skill name or category.</p>
+    </div>
+    <div class="text-center" style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+      <button class="hero-btn" style="font-size:0.9rem; padding:12px 28px;" onclick="openSignupModal()">Get Started →</button>
+      <button class="hero-btn" style="font-size:0.9rem; padding:12px 28px; background:var(--teal); color:var(--white); border-color:var(--teal);" onclick="openOfferSkillModal()">🎓 Offer a Skill</button>
     </div>
   </div>
 </section>
@@ -448,34 +602,11 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
         <h2 class="section-title"><span class="accent">Swapped Skills,</span> Shared Success</h2>
       </div>
       <div class="test-nav">
-        <button>‹</button>
-        <button>›</button>
+        <button id="testPrev" onclick="changeTestimonials(-1)" aria-label="Previous testimonials">‹</button>
+        <button id="testNext" onclick="changeTestimonials(1)" aria-label="Next testimonials">›</button>
       </div>
     </div>
-    <div class="test-grid">
-      <div class="test-card">
-        <div class="quote-mark">"</div>
-        <p>I swapped my coding skills to learn graphic design, and it was the most refreshing way to learn something new. The community is so supportive, and the process is super smooth!</p>
-        <div class="author">
-          <div class="author-avatar" style="background:var(--teal);">AM</div>
-          <div class="author-info">
-            <strong>Alex M.</strong>
-            <span>Front End Developer</span>
-          </div>
-        </div>
-      </div>
-      <div class="test-card">
-        <div class="quote-mark">"</div>
-        <p>I taught digital illustration and in return, I learned the basics of Python. This platform makes learning feel human — not transactional.</p>
-        <div class="author">
-          <div class="author-avatar" style="background:var(--yellow);">LR</div>
-          <div class="author-info">
-            <strong>Leila R.</strong>
-            <span>Freelance Illustrator</span>
-          </div>
-        </div>
-      </div>
-    </div>
+    <div class="test-grid" id="testGrid"></div>
   </div>
 </section>
 
@@ -526,9 +657,14 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
       <div class="cta-floats r">🌍</div>
       <h2>Become a Part of Our Learning Community</h2>
       <p>Join a vibrant network of learners and teachers exchanging skills across the globe. Whether you're here to teach, learn, or both — you'll find a place where growth, support, and collaboration come naturally.</p>
-      <div class="cta-form">
-        <input type="email" placeholder="Enter Your Email" />
-        <button>Subscribe</button>
+      <div class="cta-form" id="ctaForm">
+        <input type="email" placeholder="Enter Your Email" id="ctaEmail" />
+        <button type="button" onclick="handleCtaSubscribe()">Subscribe</button>
+        <span class="cta-error" id="ctaError"></span>
+      </div>
+      <div class="cta-success" id="ctaSuccess">
+        <span class="success-icon">🎉</span>
+        Thanks! You're subscribed.
       </div>
     </div>
   </div>
@@ -545,8 +681,8 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
         </div>
         <p>SkillSwap is here for it! For establishing that connection! Make your match! In person or Online!</p>
         <div class="app-badges">
-          <div class="app-badge"><span class="badge-icon">▶</span> Google Play</div>
-          <div class="app-badge"><span class="badge-icon">🍎</span> App Store</div>
+          <a href="#" class="app-badge"><span class="badge-icon">▶</span> Google Play</a>
+          <a href="#" class="app-badge"><span class="badge-icon">🍎</span> App Store</a>
         </div>
       </div>
       <div>
@@ -562,7 +698,7 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
         <h5>Quick Links</h5>
         <ul>
           <li><a href="#">Terms of Service</a></li>
-          <li><a href="#">Help & Support</a></li>
+          <li><a href="#">Help &amp; Support</a></li>
         </ul>
       </div>
       <div>
@@ -599,27 +735,8 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
 <div class="page" id="page-profile">
   <section class="profile-hero">
     <div class="container">
-      <div class="profile-top">
-        <div class="profile-avatar" style="background:linear-gradient(135deg,var(--teal),var(--teal-dark));">DA</div>
-        <div class="profile-info">
-          <h2>Darren Ang <span class="verified">✓ Verified Student</span></h2>
-          <p style="color:var(--gray); font-size:0.88rem;">3rd Year · Faculty of Computing · Quest International University</p>
-          <p class="bio">"I love making Stats less scary. Let's work through problems together! I've been tutoring for 2 semesters and really enjoy seeing lightbulb moments."</p>
-          <div class="profile-tags">
-            <span class="profile-tag">Statistics</span>
-            <span class="profile-tag">R Programming</span>
-            <span class="profile-tag">SPSS</span>
-            <span class="profile-tag">Data Analysis</span>
-            <span class="profile-tag">Excel</span>
-          </div>
-        </div>
-      </div>
-      <div class="profile-stats">
-        <div class="stat-box"><div class="num">4.2</div><div class="label">★ Average Rating</div></div>
-        <div class="stat-box"><div class="num">18</div><div class="label">Sessions Completed</div></div>
-        <div class="stat-box"><div class="num">14</div><div class="label">Unique Students</div></div>
-        <div class="stat-box"><div class="num">96%</div><div class="label">Response Rate</div></div>
-      </div>
+      <div class="profile-top" id="profileTop"></div>
+      <div class="profile-stats" id="profileStats"></div>
     </div>
   </section>
 
@@ -627,81 +744,31 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
     <!-- Availability Schedule -->
     <section class="schedule-section">
       <h3 class="section-title" style="font-size:1.2rem;">📅 Availability — <span class="accent">Click to Book</span></h3>
-      <p style="color:var(--gray); font-size:0.88rem;">Green slots are open. Click one to select and book.</p>
-      <div class="schedule-grid">
-        <div class="day-col">
-          <h5>Monday</h5>
-          <div class="slot open" onclick="selectSlot(this)">10:00 AM</div>
-          <div class="slot taken">2:00 PM</div>
-          <div class="slot open" onclick="selectSlot(this)">4:00 PM</div>
-        </div>
-        <div class="day-col">
-          <h5>Tuesday</h5>
-          <div class="slot taken">10:00 AM</div>
-          <div class="slot taken">1:00 PM</div>
-        </div>
-        <div class="day-col">
-          <h5>Wednesday</h5>
-          <div class="slot open" onclick="selectSlot(this)">10:00 AM</div>
-          <div class="slot open" onclick="selectSlot(this)">3:00 PM</div>
-        </div>
-        <div class="day-col">
-          <h5>Thursday</h5>
-          <div class="slot taken">11:00 AM</div>
-          <div class="slot open" onclick="selectSlot(this)">2:00 PM</div>
-        </div>
-        <div class="day-col">
-          <h5>Friday</h5>
-          <div class="slot open" onclick="selectSlot(this)">9:00 AM</div>
-          <div class="slot open" onclick="selectSlot(this)">1:00 PM</div>
-          <div class="slot taken">4:00 PM</div>
-        </div>
+      <p style="color:var(--gray); font-size:0.88rem;">Select an open slot to book your session.</p>
+      <div class="schedule-grid" id="scheduleGrid"></div>
+      <div class="schedule-legend" aria-label="Calendar legend">
+        <div class="legend-item"><span class="legend-dot available"></span> Available</div>
+        <div class="legend-item"><span class="legend-dot taken"></span> Taken</div>
+        <div class="legend-item"><span class="legend-dot sel"></span> Selected</div>
       </div>
+      <div class="selected-slot-info" id="selectedSlotInfo" role="status" aria-live="polite"></div>
     </section>
 
     <!-- Session Details -->
     <section style="padding-bottom:24px;">
       <h3 class="section-title" style="font-size:1.2rem;">📋 Learning Session <span class="accent">Details</span></h3>
-      <div class="session-info">
-        <div class="info-block"><div class="lbl">Format</div><div class="val">1-on-1 or Small Group (max 3)</div></div>
-        <div class="info-block"><div class="lbl">Duration</div><div class="val">45 min – 1.5 hours</div></div>
-        <div class="info-block"><div class="lbl">Location</div><div class="val">QIU Library Room 3B / Google Meet</div></div>
-        <div class="info-block"><div class="lbl">Skill Level</div><div class="val"><span class="level-badge intermediate" style="margin:0;">Intermediate</span></div></div>
-      </div>
+      <div class="session-info" id="sessionInfo"></div>
       <div class="action-row">
-        <button class="btn-primary" onclick="alert('✅ Booking confirmed! Check your Messages for details.')">📅 Book a Session</button>
+        <button class="btn-primary" onclick="bookSession()">📅 Book a Session</button>
         <button class="btn-outline" onclick="goPage('chat')">💬 Send Inquiry</button>
-        <button class="btn-save" onclick="this.textContent=this.textContent.includes('♡')?'♥ Saved!':'♡ Save Tutor'">♡ Save Tutor</button>
+        <button class="btn-save" id="saveTutorBtn" onclick="toggleSaveTutor()">♡ Save Tutor</button>
       </div>
     </section>
 
     <!-- Reviews -->
     <section class="reviews-section">
-      <h3 class="section-title" style="font-size:1.2rem;">⭐ Reviews & <span class="accent">Ratings</span></h3>
-      <div class="review-item">
-        <div class="review-head">
-          <span class="reviewer">Aisha M.</span>
-          <span class="date">2 weeks ago</span>
-        </div>
-        <div class="review-stars">★★★★★</div>
-        <p class="review-text">Darren explained regression step-by-step with real exam questions. Really patient when I got confused on ANOVA interpretation. Highly recommend for anyone taking BIT2100!</p>
-      </div>
-      <div class="review-item">
-        <div class="review-head">
-          <span class="reviewer">Priya N.</span>
-          <span class="date">1 month ago</span>
-        </div>
-        <div class="review-stars">★★★★☆</div>
-        <p class="review-text">Great at explaining R programming basics. Would've liked more hands-on exercises but overall very helpful and friendly.</p>
-      </div>
-      <div class="review-item">
-        <div class="review-head">
-          <span class="reviewer">Wei Chen</span>
-          <span class="date">1 month ago</span>
-        </div>
-        <div class="review-stars">★★★★☆</div>
-        <p class="review-text">Helped me prep for my Statistics final. Darren knows his stuff and keeps the session focused. Good use of time.</p>
-      </div>
+      <h3 class="section-title" style="font-size:1.2rem;">⭐ Reviews &amp; <span class="accent">Ratings</span></h3>
+      <div id="profileReviews"></div>
     </section>
   </div>
 </div><!-- end page-profile -->
@@ -714,23 +781,23 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
   <div class="container chat-page-wrap">
     <h2 class="section-title" style="font-size:1.3rem; margin-bottom:20px;">💬 <span class="accent">Messages</span></h2>
     <div class="chat-container">
-      <div class="chat-sidebar">
+      <div class="chat-sidebar" id="chatSidebar">
         <h4>Conversations</h4>
-        <div class="chat-contact active">
-          <div class="contact-avatar" style="background:var(--teal);">DA</div>
+        <div class="chat-contact active" data-chat="hongyuee" onclick="switchChat('hongyuee')">
+          <div class="contact-avatar" style="background:var(--teal);">HY</div>
           <div class="contact-info">
-            <strong>Darren Ang</strong>
+            <strong>Hong Yuee</strong>
             <span>Perfect, those are my strong…</span>
           </div>
         </div>
-        <div class="chat-contact">
-          <div class="contact-avatar" style="background:var(--yellow); color:var(--dark);">SL</div>
+        <div class="chat-contact" data-chat="enya" onclick="switchChat('enya')">
+          <div class="contact-avatar" style="background:var(--yellow); color:var(--dark);">EW</div>
           <div class="contact-info">
-            <strong>Sarah Lim</strong>
+            <strong>Enya Wong</strong>
             <span>Sure! Let me know your ava…</span>
           </div>
         </div>
-        <div class="chat-contact">
+        <div class="chat-contact" data-chat="kumar" onclick="switchChat('kumar')">
           <div class="contact-avatar" style="background:#EF4444;">KR</div>
           <div class="contact-info">
             <strong>Kumar Rajan</strong>
@@ -739,21 +806,22 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
         </div>
       </div>
       <div class="chat-main">
-        <div class="chat-header">
-          <div class="contact-avatar" style="background:var(--teal); width:36px; height:36px; border-radius:50; display:flex; align-items:center; justify-content:center; color:white; font-weight:700; font-size:0.75rem; border-radius:50%;">DA</div>
-          <strong>Darren Ang</strong>
+        <div class="chat-header" id="chatHeader">
+          <div class="contact-avatar" style="background:var(--teal); width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-weight:700; font-size:0.75rem;">HY</div>
+          <strong>Hong Yuee</strong>
           <div class="status-dot"></div>
           <span style="font-size:0.8rem; color:var(--gray);">Online</span>
+          <button id="chatContactsToggle" onclick="toggleChatSidebar()" aria-label="Toggle contacts list">👥</button>
         </div>
-        <div class="chat-messages">
+        <div class="chat-messages" id="chatMessages">
           <div class="msg them">Hey! I saw you're interested in Stats help. What topics are you covering? <span class="time">2:30 PM</span></div>
-          <div class="msg me">Hi Darren! I'm struggling with regression analysis and ANOVA for my BIT2100 assignment. <span class="time">2:32 PM</span></div>
+          <div class="msg me">Hi Hong Yuee! I'm struggling with regression analysis and ANOVA for my BIT2100 assignment. <span class="time">2:32 PM</span></div>
           <div class="msg them">Perfect, those are my strong areas. Want to book a session this Wednesday 3PM? I can prep some practice problems. <span class="time">2:33 PM</span></div>
           <div class="msg me">That works! Booking now 🙌 <span class="time">2:34 PM</span></div>
           <div class="msg them">Great! I'll send you some pre-reading material. See you Wed! <span class="time">2:35 PM</span></div>
         </div>
         <div class="chat-input-bar">
-          <input type="text" placeholder="Type a message…" id="chatInput" onkeydown="if(event.key==='Enter')sendMsg()" />
+          <input type="text" placeholder="Type a message…" id="chatInput" onkeydown="if(event.key==='Enter')sendMsg()" aria-label="Type a message" />
           <button onclick="sendMsg()">Send</button>
         </div>
       </div>
@@ -769,16 +837,16 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
   <div class="container feedback-page">
     <h2 class="section-title" style="font-size:1.3rem; margin-bottom:20px;">⭐ Post-Session <span class="accent">Feedback</span></h2>
     <div class="feedback-card">
-      <h3>Rate Your Session with Darren Ang</h3>
-      <p class="session-ref">Statistics – Regression & ANOVA · Wed, 3:00 PM · 1 hour</p>
+      <h3>Rate Your Session with Hong Yuee</h3>
+      <p class="session-ref">Statistics – Regression &amp; ANOVA · Wed, 3:00 PM · 1 hour</p>
 
       <label style="font-weight:600; font-size:0.9rem; display:block; margin-bottom:8px;">Overall Rating</label>
       <div class="stars-select">
-        <button class="star-btn active" onclick="setStars(1)">★</button>
-        <button class="star-btn active" onclick="setStars(2)">★</button>
-        <button class="star-btn active" onclick="setStars(3)">★</button>
-        <button class="star-btn active" onclick="setStars(4)">★</button>
-        <button class="star-btn" onclick="setStars(5)">★</button>
+        <button class="star-btn active" onclick="setStars(1)" aria-label="Rate 1 star">★</button>
+        <button class="star-btn active" onclick="setStars(2)" aria-label="Rate 2 stars">★</button>
+        <button class="star-btn active" onclick="setStars(3)" aria-label="Rate 3 stars">★</button>
+        <button class="star-btn active" onclick="setStars(4)" aria-label="Rate 4 stars">★</button>
+        <button class="star-btn" onclick="setStars(5)" aria-label="Rate 5 stars">★</button>
       </div>
 
       <label style="font-weight:600; font-size:0.9rem; display:block; margin-bottom:8px;">What went well? (select all that apply)</label>
@@ -793,7 +861,7 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
       </div>
 
       <label style="font-weight:600; font-size:0.9rem; display:block; margin-bottom:8px;">Write a review (optional)</label>
-      <textarea class="feedback-textarea" placeholder="Tell other students about your experience...">Darren explained regression step-by-step with real exam questions. Really patient when I got confused. Highly recommend!</textarea>
+      <textarea class="feedback-textarea" placeholder="Tell other students about your experience...">Hong Yuee explained regression step-by-step with real exam questions. Really patient when I got confused. Highly recommend!</textarea>
 
       <div class="action-row">
         <button class="btn-primary" onclick="alert('✅ Review submitted! Thank you for your feedback.')">Submit Review</button>
@@ -814,58 +882,60 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
         <h2 class="section-title" style="font-size:1.3rem;">🏘️ Community <span class="accent">Board</span></h2>
         <p style="color:var(--gray); font-size:0.88rem;">Post skill requests, find study groups, or offer help.</p>
       </div>
-      <button class="btn-primary">+ Post a Request</button>
+      <button class="btn-primary" onclick="openPostModal()">+ Post a Request</button>
     </div>
 
-    <div class="post-card">
-      <div class="post-top">
-        <h4>🆘 Need help with Java OOP concepts</h4>
-        <span class="time">2 hours ago · Aisha M.</span>
+    <div id="boardPosts">
+      <div class="post-card">
+        <div class="post-top">
+          <h4>🆘 Need help with Java OOP concepts</h4>
+          <span class="time">2 hours ago · Aisha M.</span>
+        </div>
+        <p>Struggling with inheritance and polymorphism for my BIT1023 assignment. Anyone free this week? Willing to trade Python help in return!</p>
+        <div class="post-footer">
+          <button class="post-btn">💬 Reply (3)</button>
+          <button class="post-btn help">🙋 I Can Help</button>
+          <button class="post-btn" onclick="this.textContent=this.textContent.includes('Save')?'✓ Saved':'🔖 Save'">🔖 Save</button>
+        </div>
       </div>
-      <p>Struggling with inheritance and polymorphism for my BIT1023 assignment. Anyone free this week? Willing to trade Python help in return!</p>
-      <div class="post-footer">
-        <button class="post-btn">💬 Reply (3)</button>
-        <button class="post-btn help">🙋 I Can Help</button>
-        <button class="post-btn" onclick="this.textContent=this.textContent.includes('Save')?'✓ Saved':'🔖 Save'">🔖 Save</button>
-      </div>
-    </div>
 
-    <div class="post-card">
-      <div class="post-top">
-        <h4>🎸 Guitar lessons in exchange for Mandarin practice</h4>
-        <span class="time">5 hours ago · Wei Chen</span>
+      <div class="post-card">
+        <div class="post-top">
+          <h4>🎸 Guitar lessons in exchange for Mandarin practice</h4>
+          <span class="time">5 hours ago · Wei Chen</span>
+        </div>
+        <p>Intermediate guitarist looking for a Mandarin conversation partner. Happy to meet on campus or online — flexible schedule!</p>
+        <div class="post-footer">
+          <button class="post-btn">💬 Reply (1)</button>
+          <button class="post-btn help">🙋 I Can Help</button>
+          <button class="post-btn">🔖 Save</button>
+        </div>
       </div>
-      <p>Intermediate guitarist looking for a Mandarin conversation partner. Happy to meet on campus or online — flexible schedule!</p>
-      <div class="post-footer">
-        <button class="post-btn">💬 Reply (1)</button>
-        <button class="post-btn help">🙋 I Can Help</button>
-        <button class="post-btn">🔖 Save</button>
-      </div>
-    </div>
 
-    <div class="post-card">
-      <div class="post-top">
-        <h4>📊 Group study for BIT2100 Statistics final</h4>
-        <span class="time">1 day ago · Priya Nair</span>
+      <div class="post-card">
+        <div class="post-top">
+          <h4>📊 Group study for BIT2100 Statistics final</h4>
+          <span class="time">1 day ago · Bryan</span>
+        </div>
+        <p>Forming a study group for the Stats final. Need 2-3 more people. We meet Saturdays 10 AM at the library. Bring your past year papers!</p>
+        <div class="post-footer">
+          <button class="post-btn">💬 Reply (7)</button>
+          <button class="post-btn help">🙋 Join Group</button>
+          <button class="post-btn">🔖 Save</button>
+        </div>
       </div>
-      <p>Forming a study group for the Stats final. Need 2-3 more people. We meet Saturdays 10 AM at the library. Bring your past year papers!</p>
-      <div class="post-footer">
-        <button class="post-btn">💬 Reply (7)</button>
-        <button class="post-btn help">🙋 Join Group</button>
-        <button class="post-btn">🔖 Save</button>
-      </div>
-    </div>
 
-    <div class="post-card">
-      <div class="post-top">
-        <h4>🐍 Looking for Python tutor — will teach Photoshop</h4>
-        <span class="time">2 days ago · Jason Lee</span>
-      </div>
-      <p>Need someone to walk me through Python basics (loops, functions, file handling). I'm pretty good at Photoshop and can teach in return.</p>
-      <div class="post-footer">
-        <button class="post-btn">💬 Reply (4)</button>
-        <button class="post-btn help">🙋 I Can Help</button>
-        <button class="post-btn">🔖 Save</button>
+      <div class="post-card">
+        <div class="post-top">
+          <h4>🐍 Looking for Python tutor — will teach Photoshop</h4>
+          <span class="time">2 days ago · YueZhe Li</span>
+        </div>
+        <p>Need someone to walk me through Python basics (loops, functions, file handling). I'm pretty good at Photoshop and can teach in return.</p>
+        <div class="post-footer">
+          <button class="post-btn">💬 Reply (4)</button>
+          <button class="post-btn help">🙋 I Can Help</button>
+          <button class="post-btn">🔖 Save</button>
+        </div>
       </div>
     </div>
   </div>
@@ -877,70 +947,404 @@ body { font-family:'Outfit',sans-serif; color:var(--dark); background:var(--whit
 <!-- ============================== -->
 <div class="page" id="page-bookmarks">
   <div class="container bookmarks-page">
-    <h2 class="section-title" style="font-size:1.3rem; margin-bottom:6px;">♡ Saved <span class="accent">Tutors & Skills</span></h2>
+    <h2 class="section-title" style="font-size:1.3rem; margin-bottom:6px;">♡ Saved <span class="accent">Tutors &amp; Skills</span></h2>
     <p style="color:var(--gray); font-size:0.88rem; margin-bottom:28px;">Your bookmarked peers for quick access.</p>
-
-    <div class="skill-grid">
-      <div class="skill-card" onclick="goPage('profile')">
-        <div class="skill-img" style="background:linear-gradient(135deg,var(--teal-light),#C4B5FD);">
-          <span>📊</span>
-        </div>
-        <div class="skill-body">
-          <h4>Statistics & R Programming</h4>
-          <span class="level-badge intermediate">Intermediate</span>
-          <div class="tutor-row">
-            <div class="mini-avatar" style="background:var(--teal);">DA</div>
-            <span>Darren Ang · ★ 4.2 · 18 sessions</span>
-          </div>
-          <div style="display:flex; gap:8px; margin-top:12px;">
-            <button class="btn-primary" style="padding:8px 18px; font-size:0.82rem; border-width:1.5px;">Book Again</button>
-            <button class="btn-save" style="padding:8px 16px; font-size:0.82rem; border-width:1.5px;" onclick="event.stopPropagation(); this.textContent='Removed!'">♥ Unsave</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="skill-card" onclick="goPage('profile')">
-        <div class="skill-img" style="background:linear-gradient(135deg,#FDE68A,#FCA5A5);">
-          <span>🎨</span>
-        </div>
-        <div class="skill-body">
-          <h4>UI/UX Design (Figma)</h4>
-          <span class="level-badge advanced">Advanced</span>
-          <div class="tutor-row">
-            <div class="mini-avatar" style="background:var(--yellow); color:var(--dark);">SL</div>
-            <span>Sarah Lim · ★ 4.8 · 32 sessions</span>
-          </div>
-          <div style="display:flex; gap:8px; margin-top:12px;">
-            <button class="btn-primary" style="padding:8px 18px; font-size:0.82rem; border-width:1.5px;">Book Again</button>
-            <button class="btn-save" style="padding:8px 16px; font-size:0.82rem; border-width:1.5px;" onclick="event.stopPropagation(); this.textContent='Removed!'">♥ Unsave</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="skill-card" onclick="goPage('profile')">
-        <div class="skill-img" style="background:linear-gradient(135deg,#A7F3D0,#93C5FD);">
-          <span>🐍</span>
-        </div>
-        <div class="skill-body">
-          <h4>Python & Machine Learning</h4>
-          <span class="level-badge beginner">Beginner-Friendly</span>
-          <div class="tutor-row">
-            <div class="mini-avatar" style="background:#EF4444;">KR</div>
-            <span>Kumar Rajan · ★ 4.0 · 11 sessions</span>
-          </div>
-          <div style="display:flex; gap:8px; margin-top:12px;">
-            <button class="btn-primary" style="padding:8px 18px; font-size:0.82rem; border-width:1.5px;">Book Again</button>
-            <button class="btn-save" style="padding:8px 16px; font-size:0.82rem; border-width:1.5px;" onclick="event.stopPropagation(); this.textContent='Removed!'">♥ Unsave</button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <div id="bookmarksContainer"></div>
   </div>
 </div><!-- end page-bookmarks -->
 
 
+<!-- ============================== -->
+<!-- PAGE: MY BOOKINGS               -->
+<!-- ============================== -->
+<div class="page" id="page-mybookings">
+  <div class="container bookings-page">
+    <h2 class="section-title" style="font-size:1.3rem; margin-bottom:6px;">📅 My <span class="accent">Bookings</span></h2>
+    <p style="color:var(--gray); font-size:0.88rem; margin-bottom:28px;">Manage your upcoming and past sessions.</p>
+    <div id="myBookingsContainer"></div>
+  </div>
+</div><!-- end page-mybookings -->
+
+
+<!-- ============================== -->
+<!-- MODALS                          -->
+<!-- ============================== -->
+
+<!-- Booking Confirmation Modal -->
+<div class="modal-overlay" id="bookingModal" role="dialog" aria-modal="true" aria-label="Confirm booking">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>📅 Confirm Booking</h3>
+      <button class="modal-close" onclick="closeModal('bookingModal')" aria-label="Close booking dialog">✕</button>
+    </div>
+    <div class="modal-body" id="bookingModalBody"></div>
+  </div>
+</div>
+
+<!-- Post Request Modal -->
+<div class="modal-overlay" id="postModal" role="dialog" aria-modal="true" aria-label="Post a request">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>📝 Post a Request</h3>
+      <button class="modal-close" onclick="closeModal('postModal')" aria-label="Close post dialog">✕</button>
+    </div>
+    <div class="modal-body">
+      <label for="postTitle">Title</label>
+      <input type="text" id="postTitle" placeholder='e.g. "Need help with CSS Flexbox"'>
+      <label for="postCategory">Category</label>
+      <select id="postCategory">
+        <option value="General">General</option>
+        <option value="Technology">Technology</option>
+        <option value="Design">Design</option>
+        <option value="Language">Language</option>
+        <option value="Music">Music</option>
+        <option value="Business">Business</option>
+        <option value="Lifestyle">Lifestyle</option>
+      </select>
+      <label for="postDescription">Description</label>
+      <textarea id="postDescription" placeholder="Describe what you're looking for..."></textarea>
+      <div class="modal-actions">
+        <button class="btn-primary" onclick="submitPost()">Post Request</button>
+        <button class="btn-outline" onclick="closeModal('postModal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Signup Modal -->
+<div class="modal-overlay" id="signupModal" role="dialog" aria-modal="true" aria-label="Sign up">
+  <div class="modal-box" style="overflow:hidden;">
+    <div class="signup-header-accent">
+      <h3>⚡ Join SkillSwap</h3>
+      <p>Start exchanging skills for free today</p>
+    </div>
+    <div class="modal-body" style="padding-top:24px;">
+      <label for="signupName">Full Name</label>
+      <input type="text" id="signupName" placeholder="Your full name">
+      <label for="signupEmail">Email</label>
+      <input type="email" id="signupEmail" placeholder="university@email.com">
+      <label for="signupUniversity">University</label>
+      <input type="text" id="signupUniversity" placeholder="e.g. Quest International University">
+      <label for="signupPassword">Password</label>
+      <input type="password" id="signupPassword" placeholder="Create a password (min 6 chars)">
+      <div class="modal-actions">
+        <button class="btn-primary" onclick="submitSignup()" style="flex:1;">Create Account</button>
+        <button class="btn-outline" onclick="closeModal('signupModal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Offer Skill Modal -->
+<div class="modal-overlay" id="offerSkillModal" role="dialog" aria-modal="true" aria-label="Offer a skill">
+  <div class="modal-box">
+    <div class="signup-header-accent" style="background:linear-gradient(135deg,var(--yellow),var(--yellow-hover));">
+      <h3 style="color:var(--dark);">🎓 Offer a Skill</h3>
+      <p style="color:var(--dark2);">Share what you know — help others learn</p>
+    </div>
+    <div class="modal-body" style="padding-top:24px;">
+      <label for="offerSkillName">Skill Name</label>
+      <input type="text" id="offerSkillName" placeholder='e.g. "Python Programming"'>
+      <label for="offerCategory">Category</label>
+      <select id="offerCategory">
+        <option value="Technology">Technology</option>
+        <option value="Design">Design</option>
+        <option value="Language">Language</option>
+        <option value="Music">Music</option>
+        <option value="Business">Business</option>
+        <option value="Lifestyle">Lifestyle</option>
+      </select>
+      <label for="offerLevel">Your Level</label>
+      <select id="offerLevel">
+        <option value="Beginner">Beginner</option>
+        <option value="Intermediate">Intermediate</option>
+        <option value="Advanced">Advanced</option>
+      </select>
+      <label for="offerAvailability">Availability</label>
+      <input type="text" id="offerAvailability" placeholder='e.g. "Weekdays 3-6 PM, Sat morning"'>
+      <label for="offerDescription">Description</label>
+      <textarea id="offerDescription" placeholder="Tell learners what you'll teach and your experience..."></textarea>
+      <div class="modal-actions">
+        <button class="btn-primary" onclick="submitOfferSkill()" style="flex:1;">Publish Skill</button>
+        <button class="btn-outline" onclick="closeModal('offerSkillModal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <script>
-// Page navigation
+// ==========================================
+// PROFILE DATA — multi-profile support
+// ==========================================
+const profiles = {
+  darren: {
+    id: 'darren', initials: 'HY', name: 'Hong Yuee', verified: true,
+    subtitle: '3rd Year · Faculty of Computing · Quest International University',
+    bio: '"I love making Stats less scary. Let\'s work through problems together! I\'ve been tutoring for 2 semesters and really enjoy seeing lightbulb moments."',
+    avatarBg: 'linear-gradient(135deg,var(--teal),var(--teal-dark))',
+    tags: ['Statistics', 'R Programming', 'SPSS', 'Data Analysis', 'Excel'],
+    stats: [
+      { num: '4.2', label: '★ Average Rating' },
+      { num: '18', label: 'Sessions Completed' },
+      { num: '14', label: 'Unique Students' },
+      { num: '96%', label: 'Response Rate' }
+    ],
+    schedule: {
+      Monday: [{ time: '10:00 AM', taken: false }, { time: '2:00 PM', taken: true }, { time: '4:00 PM', taken: false }],
+      Tuesday: [{ time: '10:00 AM', taken: true }, { time: '1:00 PM', taken: true }],
+      Wednesday: [{ time: '10:00 AM', taken: false }, { time: '3:00 PM', taken: false }],
+      Thursday: [{ time: '11:00 AM', taken: true }, { time: '2:00 PM', taken: false }],
+      Friday: [{ time: '9:00 AM', taken: false }, { time: '1:00 PM', taken: false }, { time: '4:00 PM', taken: true }]
+    },
+    session: { format: '1-on-1 or Small Group (max 3)', duration: '45 min – 1.5 hours', location: 'QIU Library Room 3B / Google Meet', level: 'Intermediate', levelClass: 'intermediate' },
+    reviews: [
+      { reviewer: 'Enya Wong Xin Wen', date: '2 weeks ago', stars: 5, text: 'Hong Yuee explained regression step-by-step with real exam questions. Really patient when I got confused on ANOVA interpretation. Highly recommend for anyone taking BIT2100!' },
+      { reviewer: 'Bryan', date: '1 month ago', stars: 4, text: 'Great at explaining R programming basics. Would\'ve liked more hands-on exercises but overall very helpful and friendly.' },
+      { reviewer: 'YueZe Li', date: '1 month ago', stars: 4, text: 'Helped me prep for my Statistics final. Hong Yuee knows his stuff and keeps the session focused. Good use of time.' }
+    ]
+  },
+  sarah: {
+    id: 'sarah', initials: 'EW', name: 'Enya Wong', verified: true,
+    subtitle: '2nd Year · Faculty of Creative Media · Quest International University',
+    bio: '"Design is about solving problems beautifully. I love teaching Canva, Figma, and basic UI principles — let\'s make something awesome together!"',
+    avatarBg: 'linear-gradient(135deg,#F59E0B,#EC4899)',
+    tags: ['UI/UX Design', 'Canva', 'Figma', 'Adobe XD', 'Graphic Design'],
+    stats: [
+      { num: '4.8', label: '★ Average Rating' },
+      { num: '32', label: 'Sessions Completed' },
+      { num: '24', label: 'Unique Students' },
+      { num: '98%', label: 'Response Rate' }
+    ],
+    schedule: {
+      Monday: [{ time: '9:00 AM', taken: false }, { time: '1:00 PM', taken: true }],
+      Tuesday: [{ time: '10:00 AM', taken: true }, { time: '3:00 PM', taken: false }],
+      Wednesday: [{ time: '11:00 AM', taken: true }],
+      Thursday: [{ time: '10:00 AM', taken: false }, { time: '2:00 PM', taken: false }, { time: '4:00 PM', taken: true }],
+      Friday: [{ time: '9:00 AM', taken: false }]
+    },
+    session: { format: '1-on-1 Workshop Style', duration: '1 – 2 hours', location: 'Laplace / Zoom', level: 'Beginner', levelClass: 'beginner' },
+    reviews: [
+      { reviewer: 'YueZhe Li', date: '1 week ago', stars: 5, text: 'Enya Wong is an amazing teacher! She walked me through Canva from scratch and now I can design social media posts confidently.' },
+      { reviewer: 'Hong Yuee', date: '3 weeks ago', stars: 5, text: 'Really creative and patient. Helped me redesign my portfolio layout in Figma. Would book again!' },
+      { reviewer: 'Bryan', date: '1 month ago', stars: 4, text: 'Good pace for beginners. Learned the basics of UI design in just one session. Very approachable.' }
+    ]
+  },
+  maria: {
+    id: 'maria', initials: 'JY', name: 'Lim Jie Yee', verified: true,
+    subtitle: '4th Year · Faculty of Languages & Communication · Quest International University',
+    bio: '"¡Hola! I\'m a native Spanish speaker and love helping students master conversational Spanish. Let\'s practice together — no textbooks, just real conversation!"',
+    avatarBg: 'linear-gradient(135deg,#EF4444,#F97316)',
+    tags: ['Spanish', 'Conversational Skills', 'Grammar', 'DELE Prep', 'Latin Culture'],
+    stats: [
+      { num: '4.9', label: '★ Average Rating' },
+      { num: '45', label: 'Sessions Completed' },
+      { num: '30', label: 'Unique Students' },
+      { num: '99%', label: 'Response Rate' }
+    ],
+    schedule: {
+      Monday: [{ time: '11:00 AM', taken: false }, { time: '3:00 PM', taken: false }],
+      Tuesday: [{ time: '9:00 AM', taken: true }, { time: '1:00 PM', taken: false }],
+      Wednesday: [{ time: '10:00 AM', taken: false }, { time: '2:00 PM', taken: true }, { time: '4:00 PM', taken: false }],
+      Thursday: [{ time: '11:00 AM', taken: false }],
+      Friday: [{ time: '10:00 AM', taken: true }, { time: '2:00 PM', taken: false }]
+    },
+    session: { format: '1-on-1 Conversation Practice', duration: '45 min – 1 hour', location: 'QIU Language Lab / Google Meet', level: 'Advanced', levelClass: 'advanced' },
+    reviews: [
+      { reviewer: 'Teo Boon Shen', date: '1 week ago', stars: 5, text: 'Lim Jie Yee is the best language tutor I\'ve had! After 3 sessions I can hold a basic conversation in Spanish. So fun and encouraging.' },
+      { reviewer: 'Enya Wong Xin Wen', date: '2 weeks ago', stars: 5, text: 'Her teaching style is so natural — felt like chatting with a friend rather than a lesson. Highly recommend for anyone wanting to learn Spanish.' },
+      { reviewer: 'Kumar R.', date: '1 month ago', stars: 4, text: 'Good structure to the sessions. She corrects your pronunciation gently and gives useful vocab lists after each session.' }
+    ]
+  }
+};
+
+let currentProfileId = 'darren';
+let selectedSlotEl = null;
+
+function viewProfile(id) {
+  goPage('profile');
+  renderProfile(id);
+}
+
+function renderProfile(id) {
+  const p = profiles[id];
+  if (!p) return;
+  currentProfileId = id;
+  selectedSlotEl = null;
+
+  // Remove old trust section if exists
+  const oldTrust = document.querySelector('.trust-section');
+  if (oldTrust) oldTrust.remove();
+
+  // Top section
+  document.getElementById('profileTop').innerHTML = `
+    <div class="profile-avatar" style="background:${p.avatarBg};">${p.initials}</div>
+    <div class="profile-info">
+      <h2>${p.name} ${p.verified ? '<span class="verified">✓ Verified Student</span>' : ''}</h2>
+      <p style="color:var(--gray); font-size:0.88rem;">${p.subtitle}</p>
+      <p class="bio">${p.bio}</p>
+      <div class="profile-tags">${p.tags.map(t => `<span class="profile-tag">${t}</span>`).join('')}</div>
+    </div>`;
+
+  // Stats
+  document.getElementById('profileStats').innerHTML = p.stats.map(s =>
+    `<div class="stat-box"><div class="num">${s.num}</div><div class="label">${s.label}</div></div>`
+  ).join('');
+
+  // Schedule
+  document.getElementById('scheduleGrid').innerHTML = Object.entries(p.schedule).map(([day, slots]) => `
+    <div class="day-col">
+      <h5>${day}</h5>
+      ${slots.map((s, i) => s.taken
+        ? `<div class="slot taken">${s.time}</div>`
+        : `<div class="slot open" onclick="selectSlot(this)" data-day="${day}" data-idx="${i}">${s.time}</div>`
+      ).join('')}
+    </div>`).join('');
+
+  // Clear selected slot info
+  const info = document.getElementById('selectedSlotInfo');
+  info.classList.remove('visible');
+  info.textContent = '';
+
+  // Session info
+  document.getElementById('sessionInfo').innerHTML = `
+    <div class="info-block"><div class="lbl">Format</div><div class="val">${p.session.format}</div></div>
+    <div class="info-block"><div class="lbl">Duration</div><div class="val">${p.session.duration}</div></div>
+    <div class="info-block"><div class="lbl">Location</div><div class="val">${p.session.location}</div></div>
+    <div class="info-block"><div class="lbl">Skill Level</div><div class="val"><span class="level-badge ${p.session.levelClass}" style="margin:0;">${p.session.level}</span></div></div>`;
+
+  // Reviews
+  document.getElementById('profileReviews').innerHTML = p.reviews.map(r => {
+    const filled = '★'.repeat(r.stars);
+    const empty = '☆'.repeat(5 - r.stars);
+    return `<div class="review-item">
+      <div class="review-head"><span class="reviewer">${r.reviewer}</span><span class="date">${r.date}</span></div>
+      <div class="review-stars">${filled}${empty}</div>
+      <p class="review-text">${r.text}</p>
+    </div>`;
+  }).join('');
+
+  // Trust section (rendered after stats)
+  const trustHTML = `
+    <div class="trust-section">
+      <h4>🛡️ Trust & Verification</h4>
+      <div class="trust-badges">
+        <div class="trust-badge">
+          <div class="tb-icon verify">✅</div>
+          <div class="tb-text">
+            <strong>Verified Student</strong>
+            <span>University email verified via QIU</span>
+          </div>
+        </div>
+        <div class="trust-badge">
+          <div class="tb-icon reviews">⭐</div>
+          <div class="tb-text">
+            <strong>${p.reviews.length} Review${p.reviews.length !== 1 ? 's' : ''}</strong>
+            <span>From verified students</span>
+          </div>
+        </div>
+        <div class="trust-badge">
+          <div class="tb-icon response">💬</div>
+          <div class="tb-text">
+            <strong>${p.stats[3].num} Response Rate</strong>
+            <span>Usually replies within 2 hours</span>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  // Insert trust section after profile stats
+  document.getElementById('profileStats').insertAdjacentHTML('afterend', trustHTML);
+
+  // Update save button state
+  updateSaveButton();
+}
+
+// Render default profile on load
+document.addEventListener('DOMContentLoaded', () => renderProfile('darren'));
+
+
+// ==========================================
+// BOOKMARKS — with empty state + sync
+// ==========================================
+let bookmarks = [
+  { id: 'darren', emoji: '📊', gradient: 'linear-gradient(135deg,var(--teal-light),#C4B5FD)', title: 'Statistics & R Programming', level: 'Intermediate', levelClass: 'intermediate', initials: 'HY', avatarBg: 'var(--teal)', tutorInfo: 'Hong Yuee · ★ 4.2 · 18 sessions' },
+  { id: 'sarah', emoji: '🎨', gradient: 'linear-gradient(135deg,#FDE68A,#FCA5A5)', title: 'UI/UX Design (Figma)', level: 'Advanced', levelClass: 'advanced', initials: 'EW', avatarBg: 'var(--yellow)', tutorInfo: 'Enya Wong · ★ 4.8 · 32 sessions' },
+  { id: 'maria', emoji: '🗣️', gradient: 'linear-gradient(135deg,#A7F3D0,#93C5FD)', title: 'Conversational Spanish', level: 'Beginner-Friendly', levelClass: 'beginner', initials: 'JY', avatarBg: '#EF4444', tutorInfo: 'Lim Jie Yee · ★ 4.9 · 45 sessions' }
+];
+
+function renderBookmarks() {
+  const container = document.getElementById('bookmarksContainer');
+  if (bookmarks.length === 0) {
+    container.innerHTML = `
+      <div class="bookmarks-empty">
+        <span class="empty-icon">📚</span>
+        <p>You haven't saved any tutors yet.</p>
+        <a onclick="goPage('home'); setTimeout(() => document.querySelector('.explore').scrollIntoView({behavior:'smooth'}), 300);">Browse skills →</a>
+      </div>`;
+    return;
+  }
+  container.innerHTML = `<div class="skill-grid">${bookmarks.map(b => `
+    <div class="skill-card" onclick="viewProfile('${b.id}')">
+      <div class="skill-img" style="background:${b.gradient};"><span>${b.emoji}</span></div>
+      <div class="skill-body">
+        <h4>${b.title}</h4>
+        <span class="level-badge ${b.levelClass}">${b.level}</span>
+        <div class="tutor-row">
+          <div class="mini-avatar" style="background:${b.avatarBg};">${b.initials}</div>
+          <span>${b.tutorInfo}</span>
+        </div>
+        <div style="display:flex; gap:8px; margin-top:12px;">
+          <button class="btn-primary" style="padding:8px 18px; font-size:0.82rem; border-width:1.5px;" onclick="event.stopPropagation(); viewProfile('${b.id}')">Book Again</button>
+          <button class="btn-save" style="padding:8px 16px; font-size:0.82rem; border-width:1.5px;" onclick="event.stopPropagation(); removeBookmark('${b.id}')">♥ Unsave</button>
+        </div>
+      </div>
+    </div>`).join('')}</div>`;
+}
+
+function removeBookmark(id) {
+  bookmarks = bookmarks.filter(b => b.id !== id);
+  renderBookmarks();
+  if (currentProfileId === id) updateSaveButton();
+}
+
+function toggleSaveTutor() {
+  const p = profiles[currentProfileId];
+  if (!p) return;
+  const idx = bookmarks.findIndex(b => b.id === currentProfileId);
+  if (idx >= 0) {
+    bookmarks.splice(idx, 1);
+  } else {
+    const bookmarkData = {
+      darren: { emoji: '📊', gradient: 'linear-gradient(135deg,var(--teal-light),#C4B5FD)', title: 'Statistics & R Programming' },
+      sarah:  { emoji: '🎨', gradient: 'linear-gradient(135deg,#FDE68A,#FCA5A5)', title: 'UI/UX Design (Figma)' },
+      maria:  { emoji: '🗣️', gradient: 'linear-gradient(135deg,#A7F3D0,#93C5FD)', title: 'Conversational Spanish' }
+    };
+    const d = bookmarkData[currentProfileId] || { emoji: '📚', gradient: 'var(--gray-light)', title: p.name };
+    bookmarks.push({
+      id: currentProfileId, emoji: d.emoji, gradient: d.gradient, title: d.title,
+      level: p.session.level, levelClass: p.session.levelClass,
+      initials: p.initials, avatarBg: p.avatarBg.includes('gradient') ? 'var(--teal)' : p.avatarBg,
+      tutorInfo: `${p.name} · ★ ${p.stats[0].num} · ${p.stats[1].num} sessions`
+    });
+  }
+  updateSaveButton();
+  renderBookmarks();
+}
+
+function updateSaveButton() {
+  const btn = document.getElementById('saveTutorBtn');
+  if (!btn) return;
+  const isSaved = bookmarks.some(b => b.id === currentProfileId);
+  btn.textContent = isSaved ? '♥ Saved!' : '♡ Save Tutor';
+  btn.classList.toggle('saved', isSaved);
+}
+
+document.addEventListener('DOMContentLoaded', renderBookmarks);
+
+
+// ==========================================
+// PAGE NAVIGATION
+// ==========================================
 function goPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + id).classList.add('active');
@@ -948,6 +1352,8 @@ function goPage(id) {
   const navBtn = document.querySelector(`.nav-link[data-nav="${id}"]`);
   if (navBtn) navBtn.classList.add('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
+  // Close mobile menu if open
+  document.querySelector('.nav-links').classList.remove('open');
 }
 
 // FAQ accordion
@@ -958,49 +1364,644 @@ function toggleFaq(el) {
   if (!wasOpen) item.classList.add('open');
 }
 
-// Category filter pills
+
+// ==========================================
+// HAMBURGER MENU (mobile)
+// ==========================================
+function toggleMobileMenu() {
+  const nav = document.querySelector('.nav-links');
+  nav.classList.toggle('open');
+  const toggle = document.getElementById('menu-toggle');
+  toggle.setAttribute('aria-expanded', nav.classList.contains('open'));
+}
+
+
+// ==========================================
+// CATEGORY FILTER + SEARCH
+// ==========================================
+let activeCategory = 'All';
+
 document.querySelectorAll('.cat-pill').forEach(pill => {
   pill.addEventListener('click', () => {
     document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
     pill.classList.add('active');
+    activeCategory = pill.getAttribute('data-cat');
+    filterSkills();
   });
 });
 
-// Slot selection
+function filterSkills() {
+  const query = (document.getElementById('skill-search').value || '').toLowerCase().trim();
+  let visibleCount = 0;
+  document.querySelectorAll('#skillGrid .skill-card').forEach(card => {
+    const cat = card.getAttribute('data-category');
+    const title = card.querySelector('h4').textContent.toLowerCase();
+    const tutor = card.querySelector('.tutor-row span').textContent.toLowerCase();
+    const matchesCat = activeCategory === 'All' || cat === activeCategory;
+    const matchesSearch = !query || title.includes(query) || tutor.includes(query);
+    const visible = matchesCat && matchesSearch;
+    card.classList.toggle('hidden', !visible);
+    if (visible) visibleCount++;
+  });
+
+  // Show/hide no-results state
+  const noResults = document.getElementById('noResults');
+  if (visibleCount === 0) {
+    const displayQuery = query || activeCategory;
+    document.getElementById('noResultsTitle').textContent = `No results for "${displayQuery}"`;
+    document.getElementById('noResultsText').textContent = 'Try a different skill name or browse another category.';
+    noResults.style.display = 'block';
+  } else {
+    noResults.style.display = 'none';
+  }
+}
+
+
+// ==========================================
+// SLOT SELECTION + BOOKING MODAL
+// ==========================================
 function selectSlot(el) {
+  if (el.classList.contains('taken')) return;
+
+  // If clicking the already-selected slot, deselect it
+  if (el.classList.contains('selected')) {
+    el.classList.remove('selected');
+    el.classList.add('open');
+    selectedSlotEl = null;
+    const info = document.getElementById('selectedSlotInfo');
+    info.classList.remove('visible');
+    info.textContent = '';
+    return;
+  }
+
+  // Deselect any previously selected slot
   document.querySelectorAll('.slot.selected').forEach(s => { s.classList.remove('selected'); s.classList.add('open'); });
   el.classList.remove('open');
   el.classList.add('selected');
+  selectedSlotEl = el;
+
+  // Show selected slot info
+  const day = el.getAttribute('data-day');
+  const time = el.textContent.trim();
+  const info = document.getElementById('selectedSlotInfo');
+  info.textContent = `📌 Selected: ${day}, ${time}`;
+  info.classList.add('visible');
 }
 
-// Star rating
+function bookSession() {
+  if (!selectedSlotEl) {
+    alert('⚠️ Please select an available time slot first.');
+    return;
+  }
+  const p = profiles[currentProfileId];
+  const day = selectedSlotEl.getAttribute('data-day');
+  const time = selectedSlotEl.textContent.trim();
+
+  document.getElementById('bookingModalBody').innerHTML = `
+    <div class="booking-tutor">
+      <div class="bt-avatar" style="background:${p.avatarBg};">${p.initials}</div>
+      <div class="bt-info">
+        <strong>${p.name}</strong>
+        <span>${p.session.level} · ${p.tags[0]}</span>
+      </div>
+    </div>
+    <div class="booking-detail">
+      <div class="bd-item"><div class="bd-label">Day</div><div class="bd-value">${day}</div></div>
+      <div class="bd-item"><div class="bd-label">Time</div><div class="bd-value">${time}</div></div>
+      <div class="bd-item"><div class="bd-label">Duration</div><div class="bd-value">${p.session.duration}</div></div>
+    </div>
+    <div class="booking-detail">
+      <div class="bd-item" style="flex:1;"><div class="bd-label">Location</div><div class="bd-value">${p.session.location}</div></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-primary" onclick="confirmBooking()">✅ Confirm Booking</button>
+      <button class="btn-outline" onclick="closeModal('bookingModal')">Cancel</button>
+    </div>`;
+
+  openModal('bookingModal');
+}
+
+function confirmBooking() {
+  if (!selectedSlotEl) return;
+  const p = profiles[currentProfileId];
+  const day = selectedSlotEl.getAttribute('data-day');
+  const idx = parseInt(selectedSlotEl.getAttribute('data-idx'), 10);
+  const time = selectedSlotEl.textContent.trim();
+  // Mark as taken in data
+  if (day && profiles[currentProfileId]) {
+    profiles[currentProfileId].schedule[day][idx].taken = true;
+  }
+  // Update DOM
+  selectedSlotEl.classList.remove('selected', 'open');
+  selectedSlotEl.classList.add('taken');
+  selectedSlotEl.style.textDecoration = 'line-through';
+  selectedSlotEl.style.cursor = 'default';
+  selectedSlotEl.removeAttribute('onclick');
+
+  // Store in my bookings
+  myBookings.push({
+    tutorId: currentProfileId,
+    tutorName: p.name,
+    tutorInitials: p.initials,
+    tutorBg: p.avatarBg,
+    skill: p.tags[0],
+    day: day,
+    dayIdx: idx,
+    time: time,
+    duration: p.session.duration,
+    location: p.session.location,
+    status: 'upcoming'
+  });
+  renderMyBookings();
+
+  selectedSlotEl = null;
+
+  // Hide slot info
+  const info = document.getElementById('selectedSlotInfo');
+  info.classList.remove('visible');
+
+  closeModal('bookingModal');
+
+  // Show feedback banner instead of alert
+  showFeedbackBanner(p.name);
+}
+
+
+// ==========================================
+// MODAL HELPERS
+// ==========================================
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+// Close modal on overlay click
+document.addEventListener('click', e => {
+  if (e.target.classList.contains('modal-overlay') && e.target.classList.contains('open')) {
+    e.target.classList.remove('open');
+  }
+});
+
+
+// ==========================================
+// POST REQUEST MODAL
+// ==========================================
+function openPostModal() {
+  document.getElementById('postTitle').value = '';
+  document.getElementById('postCategory').value = 'General';
+  document.getElementById('postDescription').value = '';
+  openModal('postModal');
+}
+
+function submitPost() {
+  const title = document.getElementById('postTitle').value.trim();
+  const category = document.getElementById('postCategory').value;
+  const desc = document.getElementById('postDescription').value.trim();
+  if (!title) { document.getElementById('postTitle').focus(); return; }
+  if (!desc) { document.getElementById('postDescription').focus(); return; }
+
+  const categoryEmojis = { General: '📌', Technology: '💻', Design: '🎨', Language: '🗣️', Music: '🎵', Business: '📄', Lifestyle: '🌿' };
+  const emoji = categoryEmojis[category] || '📌';
+
+  const postsContainer = document.getElementById('boardPosts');
+  const card = document.createElement('div');
+  card.className = 'post-card';
+  card.style.animation = 'fadeUp 0.4s ease both';
+  card.innerHTML = `
+    <div class="post-top">
+      <h4>${emoji} ${title}</h4>
+      <span class="time">Just now · You</span>
+    </div>
+    <p>${desc}</p>
+    <div class="post-footer">
+      <button class="post-btn">💬 Reply (0)</button>
+      <button class="post-btn help">🙋 I Can Help</button>
+      <button class="post-btn" onclick="this.textContent=this.textContent.includes('Save')?'✓ Saved':'🔖 Save'">🔖 Save</button>
+    </div>`;
+  postsContainer.insertBefore(card, postsContainer.firstChild);
+
+  closeModal('postModal');
+}
+
+
+// ==========================================
+// SIGNUP MODAL
+// ==========================================
+function openSignupModal() {
+  document.getElementById('signupName').value = '';
+  document.getElementById('signupEmail').value = '';
+  document.getElementById('signupUniversity').value = '';
+  document.getElementById('signupPassword').value = '';
+  openModal('signupModal');
+}
+
+function submitSignup() {
+  const name = document.getElementById('signupName').value.trim();
+  const email = document.getElementById('signupEmail').value.trim();
+  const uni = document.getElementById('signupUniversity').value.trim();
+  const pass = document.getElementById('signupPassword').value;
+  if (!name) { document.getElementById('signupName').focus(); return; }
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { document.getElementById('signupEmail').focus(); return; }
+  if (!uni) { document.getElementById('signupUniversity').focus(); return; }
+  if (pass.length < 6) { document.getElementById('signupPassword').focus(); return; }
+
+  closeModal('signupModal');
+  alert(`🎉 Welcome to SkillSwap, ${name}! Your account has been created.`);
+}
+
+
+// ==========================================
+// TESTIMONIALS — data-driven navigation
+// ==========================================
+const testimonials = [
+  { quote: 'I swapped my coding skills to learn graphic design, and it was the most refreshing way to learn something new. The community is so supportive, and the process is super smooth!', name: 'Teo Boon Shen', role: 'Front End Developer', initials: 'TB', color: 'var(--teal)' },
+  { quote: 'I taught digital illustration and in return, I learned the basics of Python. This platform makes learning feel human — not transactional.', name: 'Ong Cai Lee', role: 'Freelance Illustrator', initials: 'OC', color: 'var(--yellow)' },
+  { quote: 'SkillSwap helped me find a Mandarin tutor right on campus. In exchange, I teach guitar — it\'s the coolest study arrangement I\'ve ever had!', name: 'Wei Chen', role: 'Music Student', initials: 'WC', color: '#8B5CF6' },
+  { quote: 'As an introverted student, I was nervous at first. But the community is so welcoming. My tutor made statistics feel less intimidating and even fun!', name: 'Bryan', role: 'Data Science Major', initials: 'BR', color: '#EC4899' },
+  { quote: 'I\'ve completed 15 swaps so far. Each one taught me something new — not just the skill, but how to communicate, teach, and be patient.', name: 'YueZhe Li', role: 'CS Student & Designer', initials: 'YL', color: '#F97316' },
+  { quote: 'The booking system is seamless. I found a Spanish tutor, booked a slot, and had my first lesson within 24 hours. Incredible platform!', name: 'Kumar R.', role: 'Engineering Student', initials: 'KR', color: 'var(--red)' }
+];
+
+let testPage = 0;
+const testsPerPage = 2;
+const totalTestPages = Math.ceil(testimonials.length / testsPerPage);
+
+function renderTestimonials() {
+  const grid = document.getElementById('testGrid');
+  const start = testPage * testsPerPage;
+  const page = testimonials.slice(start, start + testsPerPage);
+  grid.innerHTML = page.map(t => `
+    <div class="test-card" style="animation:fadeUp 0.4s ease both;">
+      <div class="quote-mark">"</div>
+      <p>${t.quote}</p>
+      <div class="author">
+        <div class="author-avatar" style="background:${t.color};">${t.initials}</div>
+        <div class="author-info">
+          <strong>${t.name}</strong>
+          <span>${t.role}</span>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function changeTestimonials(dir) {
+  testPage = (testPage + dir + totalTestPages) % totalTestPages;
+  renderTestimonials();
+}
+
+document.addEventListener('DOMContentLoaded', renderTestimonials);
+
+
+// ==========================================
+// STAR RATING
+// ==========================================
 function setStars(n) {
   document.querySelectorAll('.star-btn').forEach((btn, i) => {
     btn.classList.toggle('active', i < n);
   });
 }
 
-// Chat send
+
+// ==========================================
+// CHAT — fixed time display + mobile sidebar
+// ==========================================
 function sendMsg() {
   const input = document.getElementById('chatInput');
   const text = input.value.trim();
   if (!text) return;
-  const container = document.querySelector('.chat-messages');
+  const container = document.getElementById('chatMessages');
   const msg = document.createElement('div');
   msg.className = 'msg me';
   const now = new Date();
-  msg.innerHTML = text + `<span class="time">${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}</span>`;
+  const timeStr = now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
+  msg.innerHTML = text + `<span class="time">${timeStr}</span>`;
   container.appendChild(msg);
   input.value = '';
   container.scrollTop = container.scrollHeight;
-  // Simulate reply
+
+  // Store in conversation data
+  if (chatConversations[currentChatId]) {
+    chatConversations[currentChatId].messages.push({ from: 'me', text: text, time: timeStr });
+  }
+
+  // Simulate reply — proper Date arithmetic
   setTimeout(() => {
     const reply = document.createElement('div');
     reply.className = 'msg them';
-    reply.innerHTML = 'Got it! I\'ll prepare materials for that topic. See you at the session! 👍 <span class="time">' + now.getHours() + ':' + String(now.getMinutes() + 1).padStart(2,'0') + '</span>';
+    const replyTime = new Date(now.getTime() + 60000);
+    const replyTimeStr = replyTime.getHours() + ':' + String(replyTime.getMinutes()).padStart(2,'0');
+    const replyText = 'Got it! I\'ll prepare materials for that topic. See you at the session! 👍';
+    reply.innerHTML = replyText + ' <span class="time">' + replyTimeStr + '</span>';
     container.appendChild(reply);
     container.scrollTop = container.scrollHeight;
+
+    // Store reply in conversation data
+    if (chatConversations[currentChatId]) {
+      chatConversations[currentChatId].messages.push({ from: 'them', text: replyText, time: replyTimeStr });
+    }
   }, 1200);
+}
+
+function toggleChatSidebar() {
+  const sidebar = document.getElementById('chatSidebar');
+  sidebar.classList.toggle('mobile-open');
+}
+
+// ==========================================
+// CHAT — conversation data + switching
+// ==========================================
+const chatConversations = {
+  hongyuee: {
+    name: 'Hong Yuee', initials: 'HY', bg: 'var(--teal)', status: 'Online',
+    messages: [
+      { from: 'them', text: 'Hey! I saw you\'re interested in Stats help. What topics are you covering?', time: '2:30 PM' },
+      { from: 'me', text: 'Hi Hong Yuee! I\'m struggling with regression analysis and ANOVA for my BIT2100 assignment.', time: '2:32 PM' },
+      { from: 'them', text: 'Perfect, those are my strong areas. Want to book a session this Wednesday 3PM? I can prep some practice problems.', time: '2:33 PM' },
+      { from: 'me', text: 'That works! Booking now \ud83d\ude4c', time: '2:34 PM' },
+      { from: 'them', text: 'Great! I\'ll send you some pre-reading material. See you Wed!', time: '2:35 PM' }
+    ]
+  },
+  enya: {
+    name: 'Enya Wong', initials: 'EW', bg: 'var(--yellow)', color: 'var(--dark)', status: 'Online',
+    messages: [
+      { from: 'me', text: 'Hi Enya! I saw your Canva for Beginners listing. I\'d love to learn — I\'m a total beginner with design tools.', time: '10:15 AM' },
+      { from: 'them', text: 'Hey! Absolutely, I love teaching Canva from scratch. What do you want to create? Social media posts, presentations, posters?', time: '10:18 AM' },
+      { from: 'me', text: 'Mainly social media posts and maybe a portfolio layout. Can we do a 1-on-1 session?', time: '10:20 AM' },
+      { from: 'them', text: 'Sure! Let me know your availability. I\'m free most mornings on Tuesday and Thursday.', time: '10:22 AM' },
+      { from: 'me', text: 'Tuesday 10 AM works! I\'ll book your slot now.', time: '10:24 AM' },
+      { from: 'them', text: 'Perfect! I\'ll prepare some templates we can work on together. See you then! \ud83c\udfa8', time: '10:25 AM' }
+    ]
+  },
+  kumar: {
+    name: 'Kumar Rajan', initials: 'KR', bg: '#EF4444', status: 'Away',
+    messages: [
+      { from: 'them', text: 'Hi! I saw your post about Python help. I\'m interested in swapping — I can teach photography in return.', time: '4:10 PM' },
+      { from: 'me', text: 'Hey Kumar! That sounds great. I\'ve been wanting to learn photography. What level are you at with Python?', time: '4:15 PM' },
+      { from: 'them', text: 'Complete beginner honestly. Need loops, functions, and file handling for my engineering coursework.', time: '4:18 PM' },
+      { from: 'me', text: 'I can definitely help with that! Want to meet Thursday at the library?', time: '4:20 PM' },
+      { from: 'them', text: 'See you Thursday!', time: '4:22 PM' }
+    ]
+  }
+};
+
+let currentChatId = 'hongyuee';
+
+function switchChat(chatId) {
+  currentChatId = chatId;
+  const conv = chatConversations[chatId];
+  if (!conv) return;
+
+  // Update active contact
+  document.querySelectorAll('.chat-contact').forEach(c => c.classList.remove('active'));
+  const activeContact = document.querySelector(`.chat-contact[data-chat="${chatId}"]`);
+  if (activeContact) activeContact.classList.add('active');
+
+  // Update header
+  const header = document.getElementById('chatHeader');
+  const avatarColor = conv.color ? `color:${conv.color};` : 'color:white;';
+  header.innerHTML = `
+    <div class="contact-avatar" style="background:${conv.bg}; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; ${avatarColor} font-weight:700; font-size:0.75rem;">${conv.initials}</div>
+    <strong>${conv.name}</strong>
+    <div class="status-dot" style="${conv.status === 'Away' ? 'background:var(--yellow);' : ''}"></div>
+    <span style="font-size:0.8rem; color:var(--gray);">${conv.status}</span>
+    <button id="chatContactsToggle" onclick="toggleChatSidebar()" aria-label="Toggle contacts list">\ud83d\udc65</button>`;
+
+  // Update messages
+  const messagesEl = document.getElementById('chatMessages');
+  messagesEl.innerHTML = conv.messages.map(m =>
+    `<div class="msg ${m.from === 'me' ? 'me' : 'them'}">${m.text} <span class="time">${m.time}</span></div>`
+  ).join('');
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+
+  // Close mobile sidebar
+  document.getElementById('chatSidebar').classList.remove('mobile-open');
+}
+
+// Close chat sidebar when clicking a contact on mobile
+document.querySelectorAll('.chat-contact').forEach(c => {
+  c.addEventListener('click', () => {
+    document.getElementById('chatSidebar').classList.remove('mobile-open');
+  });
+});
+
+
+// ==========================================
+// CTA EMAIL — inline feedback (no alert)
+// ==========================================
+function handleCtaSubscribe() {
+  const input = document.getElementById('ctaEmail');
+  const error = document.getElementById('ctaError');
+  const form = document.getElementById('ctaForm');
+  const success = document.getElementById('ctaSuccess');
+  const value = input.value.trim();
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!value) {
+    error.textContent = 'Please enter your email address.';
+    error.style.display = 'block';
+    input.focus();
+    return;
+  }
+  if (!emailRegex.test(value)) {
+    error.textContent = 'Please enter a valid email address.';
+    error.style.display = 'block';
+    input.focus();
+    return;
+  }
+  error.style.display = 'none';
+  input.value = '';
+  form.style.display = 'none';
+  success.style.display = 'block';
+
+  // Revert after 4 seconds
+  setTimeout(() => {
+    success.style.display = 'none';
+    form.style.display = 'flex';
+  }, 4000);
+}
+
+
+// ==========================================
+// MY BOOKINGS — store + manage
+// ==========================================
+let myBookings = [
+  {
+    tutorId: 'sarah',
+    tutorName: 'Enya Wong',
+    tutorInitials: 'EW',
+    tutorBg: 'linear-gradient(135deg,#F59E0B,#EC4899)',
+    skill: 'Canva for Beginners',
+    day: 'Tuesday',
+    dayIdx: 0,
+    time: '10:00 AM',
+    duration: '1 \u2013 2 hours',
+    location: 'Laplace / Zoom',
+    status: 'upcoming'
+  }
+];
+
+function renderMyBookings() {
+  const container = document.getElementById('myBookingsContainer');
+  if (!container) return;
+  if (myBookings.length === 0) {
+    container.innerHTML = `
+      <div class="bookings-empty-state">
+        <span class="empty-icon">📅</span>
+        <p>You haven't booked any sessions yet.</p>
+        <a onclick="goPage('home'); setTimeout(() => document.querySelector('.explore').scrollIntoView({behavior:'smooth'}), 300);">Browse skills →</a>
+      </div>`;
+    return;
+  }
+  container.innerHTML = `<div class="bookings-list">${myBookings.map((b, i) => `
+    <div class="booking-card" style="animation:fadeUp 0.4s ease both; animation-delay:${i * 0.08}s;">
+      <div class="bc-avatar" style="background:${b.tutorBg};">${b.tutorInitials}</div>
+      <div class="bc-info">
+        <h4>${b.skill} with ${b.tutorName}</h4>
+        <div class="bc-detail">📅 ${b.day}, ${b.time} · ⏱ ${b.duration} · 📍 ${b.location}</div>
+      </div>
+      <span class="bc-status ${b.status}">${b.status === 'upcoming' ? '🔵 Upcoming' : '✅ Completed'}</span>
+      <div class="bc-actions">
+        <button class="bc-reschedule" onclick="rescheduleBooking(${i})" aria-label="Reschedule session with ${b.tutorName}">🔄 Reschedule</button>
+        <button class="bc-cancel" onclick="cancelBooking(${i})" aria-label="Cancel session with ${b.tutorName}">✕ Cancel</button>
+      </div>
+    </div>`).join('')}</div>`;
+}
+
+function cancelBooking(index) {
+  const booking = myBookings[index];
+  if (!booking) return;
+  if (!confirm(`Cancel your ${booking.skill} session with ${booking.tutorName} on ${booking.day} at ${booking.time}?`)) return;
+
+  // Re-open the slot in the tutor's schedule
+  const p = profiles[booking.tutorId];
+  if (p && p.schedule[booking.day] && p.schedule[booking.day][booking.dayIdx] !== undefined) {
+    p.schedule[booking.day][booking.dayIdx].taken = false;
+  }
+
+  myBookings.splice(index, 1);
+  renderMyBookings();
+
+  // Re-render profile if currently viewing this tutor
+  if (currentProfileId === booking.tutorId) {
+    renderProfile(booking.tutorId);
+  }
+}
+
+function rescheduleBooking(index) {
+  const booking = myBookings[index];
+  if (!booking) return;
+
+  // Re-open the slot
+  const p = profiles[booking.tutorId];
+  if (p && p.schedule[booking.day] && p.schedule[booking.day][booking.dayIdx] !== undefined) {
+    p.schedule[booking.day][booking.dayIdx].taken = false;
+  }
+
+  myBookings.splice(index, 1);
+  renderMyBookings();
+
+  // Navigate to tutor profile to pick a new slot
+  viewProfile(booking.tutorId);
+}
+
+document.addEventListener('DOMContentLoaded', renderMyBookings);
+
+
+// ==========================================
+// FEEDBACK BANNER — auto-prompt
+// ==========================================
+let feedbackBannerTimeout = null;
+
+function showFeedbackBanner(tutorName) {
+  const banner = document.getElementById('feedbackBanner');
+  const text = document.getElementById('feedbackBannerText');
+  text.textContent = `✅ Session booked! Leave feedback for ${tutorName}`;
+  banner.classList.remove('hiding');
+  banner.classList.add('visible');
+
+  // Auto-hide after 8 seconds
+  clearTimeout(feedbackBannerTimeout);
+  feedbackBannerTimeout = setTimeout(() => {
+    hideFeedbackBanner();
+  }, 8000);
+}
+
+function hideFeedbackBanner() {
+  const banner = document.getElementById('feedbackBanner');
+  clearTimeout(feedbackBannerTimeout);
+  banner.classList.add('hiding');
+  setTimeout(() => {
+    banner.classList.remove('visible', 'hiding');
+  }, 300);
+}
+
+
+// ==========================================
+// OFFER SKILL — modal + card creation
+// ==========================================
+function openOfferSkillModal() {
+  document.getElementById('offerSkillName').value = '';
+  document.getElementById('offerCategory').value = 'Technology';
+  document.getElementById('offerLevel').value = 'Beginner';
+  document.getElementById('offerAvailability').value = '';
+  document.getElementById('offerDescription').value = '';
+  openModal('offerSkillModal');
+}
+
+function submitOfferSkill() {
+  const name = document.getElementById('offerSkillName').value.trim();
+  const category = document.getElementById('offerCategory').value;
+  const level = document.getElementById('offerLevel').value;
+  const availability = document.getElementById('offerAvailability').value.trim();
+  const description = document.getElementById('offerDescription').value.trim();
+
+  if (!name) { document.getElementById('offerSkillName').focus(); return; }
+  if (!availability) { document.getElementById('offerAvailability').focus(); return; }
+  if (!description) { document.getElementById('offerDescription').focus(); return; }
+
+  const categoryEmojis = { Technology: '💻', Design: '🎨', Language: '🗣️', Music: '🎵', Business: '📄', Lifestyle: '🌿' };
+  const categoryGradients = {
+    Technology: 'linear-gradient(135deg,#C4B5FD,#93C5FD)',
+    Design: 'linear-gradient(135deg,#FDE68A,#FCA5A5)',
+    Language: 'linear-gradient(135deg,#A7F3D0,#6EE7B7)',
+    Music: 'linear-gradient(135deg,#FCA5A5,#F9A8D4)',
+    Business: 'linear-gradient(135deg,#BFDBFE,#C4B5FD)',
+    Lifestyle: 'linear-gradient(135deg,#A7F3D0,#FDE68A)'
+  };
+  const levelClasses = { Beginner: 'beginner', Intermediate: 'intermediate', Advanced: 'advanced' };
+  const emoji = categoryEmojis[category] || '📚';
+  const gradient = categoryGradients[category] || 'var(--gray-light)';
+  const levelClass = levelClasses[level] || 'beginner';
+
+  const grid = document.getElementById('skillGrid');
+  const card = document.createElement('div');
+  card.className = 'skill-card';
+  card.setAttribute('data-category', category);
+  card.style.animation = 'fadeUp 0.4s ease both';
+  card.innerHTML = `
+    <div class="skill-img" style="background:${gradient};">
+      <span>${emoji}</span>
+      <span class="overlay-tag">${category}</span>
+    </div>
+    <div class="skill-body">
+      <div class="skill-meta"><span>📅 ${new Date().toLocaleDateString('en-US', {day:'numeric',month:'short',year:'numeric'})}</span><span>🕐 ${availability}</span></div>
+      <h4>${name}</h4>
+      <span class="level-badge ${levelClass}">${level}</span>
+      <div class="tutor-row">
+        <div class="mini-avatar" style="background:var(--teal);">You</div>
+        <span>You · New Listing</span>
+      </div>
+    </div>`;
+  grid.insertBefore(card, grid.firstChild);
+
+  closeModal('offerSkillModal');
+
+  // Scroll to see the new card
+  goPage('home');
+  setTimeout(() => {
+    document.querySelector('.explore').scrollIntoView({ behavior: 'smooth' });
+  }, 300);
 }
 </script>
 </body>
